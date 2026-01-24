@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "my-data-analyst",
+      "name": "datavis-pro",
       "dependencies": {
         "@tauri-apps/api": "^2",
         "@tauri-apps/plugin-dialog": "^2.6.0",
@@ -39,23 +39,23 @@
 
     "@babel/types": ["@babel/types@7.28.6", "https://repo.huaweicloud.com/repository/npm/@babel/types/-/types-7.28.6.tgz", { "dependencies": { "@babel/helper-string-parser": "^7.27.1", "@babel/helper-validator-identifier": "^7.28.5" } }, "sha512-0ZrskXVEHSWIqZM/sQZ4EV3jZJXRkio/WCxaqKZP1g//CEWEPSfeZFcms4XeKBCHU0ZKnIkdJeU/kF+eRp5lBg=="],
 
-    "@biomejs/biome": ["@biomejs/biome@2.3.11", "https://repo.huaweicloud.com/repository/npm/@biomejs/biome/-/biome-2.3.11.tgz", { "optionalDependencies": { "@biomejs/cli-darwin-arm64": "2.3.11", "@biomejs/cli-darwin-x64": "2.3.11", "@biomejs/cli-linux-arm64": "2.3.11", "@biomejs/cli-linux-arm64-musl": "2.3.11", "@biomejs/cli-linux-x64": "2.3.11", "@biomejs/cli-linux-x64-musl": "2.3.11", "@biomejs/cli-win32-arm64": "2.3.11", "@biomejs/cli-win32-x64": "2.3.11" }, "bin": { "biome": "bin/biome" } }, "sha512-/zt+6qazBWguPG6+eWmiELqO+9jRsMZ/DBU3lfuU2ngtIQYzymocHhKiZRyrbra4aCOoyTg/BmY+6WH5mv9xmQ=="],
+    "@biomejs/biome": ["@biomejs/biome@2.3.12", "https://repo.huaweicloud.com/repository/npm/@biomejs/biome/-/biome-2.3.12.tgz", { "optionalDependencies": { "@biomejs/cli-darwin-arm64": "2.3.12", "@biomejs/cli-darwin-x64": "2.3.12", "@biomejs/cli-linux-arm64": "2.3.12", "@biomejs/cli-linux-arm64-musl": "2.3.12", "@biomejs/cli-linux-x64": "2.3.12", "@biomejs/cli-linux-x64-musl": "2.3.12", "@biomejs/cli-win32-arm64": "2.3.12", "@biomejs/cli-win32-x64": "2.3.12" }, "bin": { "biome": "bin/biome" } }, "sha512-AR7h4aSlAvXj7TAajW/V12BOw2EiS0AqZWV5dGozf4nlLoUF/ifvD0+YgKSskT0ylA6dY1A8AwgP8kZ6yaCQnA=="],
 
-    "@biomejs/cli-darwin-arm64": ["@biomejs/cli-darwin-arm64@2.3.11", "https://repo.huaweicloud.com/repository/npm/@biomejs/cli-darwin-arm64/-/cli-darwin-arm64-2.3.11.tgz", { "os": "darwin", "cpu": "arm64" }, "sha512-/uXXkBcPKVQY7rc9Ys2CrlirBJYbpESEDme7RKiBD6MmqR2w3j0+ZZXRIL2xiaNPsIMMNhP1YnA+jRRxoOAFrA=="],
+    "@biomejs/cli-darwin-arm64": ["@biomejs/cli-darwin-arm64@2.3.12", "https://repo.huaweicloud.com/repository/npm/@biomejs/cli-darwin-arm64/-/cli-darwin-arm64-2.3.12.tgz", { "os": "darwin", "cpu": "arm64" }, "sha512-cO6fn+KiMBemva6EARDLQBxeyvLzgidaFRJi8G7OeRqz54kWK0E+uSjgFaiHlc3DZYoa0+1UFE8mDxozpc9ieg=="],
 
-    "@biomejs/cli-darwin-x64": ["@biomejs/cli-darwin-x64@2.3.11", "https://repo.huaweicloud.com/repository/npm/@biomejs/cli-darwin-x64/-/cli-darwin-x64-2.3.11.tgz", { "os": "darwin", "cpu": "x64" }, "sha512-fh7nnvbweDPm2xEmFjfmq7zSUiox88plgdHF9OIW4i99WnXrAC3o2P3ag9judoUMv8FCSUnlwJCM1B64nO5Fbg=="],
+    "@biomejs/cli-darwin-x64": ["@biomejs/cli-darwin-x64@2.3.12", "https://repo.huaweicloud.com/repository/npm/@biomejs/cli-darwin-x64/-/cli-darwin-x64-2.3.12.tgz", { "os": "darwin", "cpu": "x64" }, "sha512-/fiF/qmudKwSdvmSrSe/gOTkW77mHHkH8Iy7YC2rmpLuk27kbaUOPa7kPiH5l+3lJzTUfU/t6x1OuIq/7SGtxg=="],
 
-    "@biomejs/cli-linux-arm64": ["@biomejs/cli-linux-arm64@2.3.11", "https://repo.huaweicloud.com/repository/npm/@biomejs/cli-linux-arm64/-/cli-linux-arm64-2.3.11.tgz", { "os": "linux", "cpu": "arm64" }, "sha512-l4xkGa9E7Uc0/05qU2lMYfN1H+fzzkHgaJoy98wO+b/7Gl78srbCRRgwYSW+BTLixTBrM6Ede5NSBwt7rd/i6g=="],
+    "@biomejs/cli-linux-arm64": ["@biomejs/cli-linux-arm64@2.3.12", "https://repo.huaweicloud.com/repository/npm/@biomejs/cli-linux-arm64/-/cli-linux-arm64-2.3.12.tgz", { "os": "linux", "cpu": "arm64" }, "sha512-nbOsuQROa3DLla5vvsTZg+T5WVPGi9/vYxETm9BOuLHBJN3oWQIg3MIkE2OfL18df1ZtNkqXkH6Yg9mdTPem7A=="],
 
-    "@biomejs/cli-linux-arm64-musl": ["@biomejs/cli-linux-arm64-musl@2.3.11", "https://repo.huaweicloud.com/repository/npm/@biomejs/cli-linux-arm64-musl/-/cli-linux-arm64-musl-2.3.11.tgz", { "os": "linux", "cpu": "arm64" }, "sha512-XPSQ+XIPZMLaZ6zveQdwNjbX+QdROEd1zPgMwD47zvHV+tCGB88VH+aynyGxAHdzL+Tm/+DtKST5SECs4iwCLg=="],
+    "@biomejs/cli-linux-arm64-musl": ["@biomejs/cli-linux-arm64-musl@2.3.12", "https://repo.huaweicloud.com/repository/npm/@biomejs/cli-linux-arm64-musl/-/cli-linux-arm64-musl-2.3.12.tgz", { "os": "linux", "cpu": "arm64" }, "sha512-aqkeSf7IH+wkzFpKeDVPSXy9uDjxtLpYA6yzkYsY+tVjwFFirSuajHDI3ul8en90XNs1NA0n8kgBrjwRi5JeyA=="],
 
-    "@biomejs/cli-linux-x64": ["@biomejs/cli-linux-x64@2.3.11", "https://repo.huaweicloud.com/repository/npm/@biomejs/cli-linux-x64/-/cli-linux-x64-2.3.11.tgz", { "os": "linux", "cpu": "x64" }, "sha512-/1s9V/H3cSe0r0Mv/Z8JryF5x9ywRxywomqZVLHAoa/uN0eY7F8gEngWKNS5vbbN/BsfpCG5yeBT5ENh50Frxg=="],
+    "@biomejs/cli-linux-x64": ["@biomejs/cli-linux-x64@2.3.12", "https://repo.huaweicloud.com/repository/npm/@biomejs/cli-linux-x64/-/cli-linux-x64-2.3.12.tgz", { "os": "linux", "cpu": "x64" }, "sha512-CQtqrJ+qEEI8tgRSTjjzk6wJAwfH3wQlkIGsM5dlecfRZaoT+XCms/mf7G4kWNexrke6mnkRzNy6w8ebV177ow=="],
 
-    "@biomejs/cli-linux-x64-musl": ["@biomejs/cli-linux-x64-musl@2.3.11", "https://repo.huaweicloud.com/repository/npm/@biomejs/cli-linux-x64-musl/-/cli-linux-x64-musl-2.3.11.tgz", { "os": "linux", "cpu": "x64" }, "sha512-vU7a8wLs5C9yJ4CB8a44r12aXYb8yYgBn+WeyzbMjaCMklzCv1oXr8x+VEyWodgJt9bDmhiaW/I0RHbn7rsNmw=="],
+    "@biomejs/cli-linux-x64-musl": ["@biomejs/cli-linux-x64-musl@2.3.12", "https://repo.huaweicloud.com/repository/npm/@biomejs/cli-linux-x64-musl/-/cli-linux-x64-musl-2.3.12.tgz", { "os": "linux", "cpu": "x64" }, "sha512-kVGWtupRRsOjvw47YFkk5mLiAdpCPMWBo1jOwAzh+juDpUb2sWarIp+iq+CPL1Wt0LLZnYtP7hH5kD6fskcxmg=="],
 
-    "@biomejs/cli-win32-arm64": ["@biomejs/cli-win32-arm64@2.3.11", "https://repo.huaweicloud.com/repository/npm/@biomejs/cli-win32-arm64/-/cli-win32-arm64-2.3.11.tgz", { "os": "win32", "cpu": "arm64" }, "sha512-PZQ6ElCOnkYapSsysiTy0+fYX+agXPlWugh6+eQ6uPKI3vKAqNp6TnMhoM3oY2NltSB89hz59o8xIfOdyhi9Iw=="],
+    "@biomejs/cli-win32-arm64": ["@biomejs/cli-win32-arm64@2.3.12", "https://repo.huaweicloud.com/repository/npm/@biomejs/cli-win32-arm64/-/cli-win32-arm64-2.3.12.tgz", { "os": "win32", "cpu": "arm64" }, "sha512-Re4I7UnOoyE4kHMqpgtG6UvSBGBbbtvsOvBROgCCoH7EgANN6plSQhvo2W7OCITvTp7gD6oZOyZy72lUdXjqZg=="],
 
-    "@biomejs/cli-win32-x64": ["@biomejs/cli-win32-x64@2.3.11", "https://repo.huaweicloud.com/repository/npm/@biomejs/cli-win32-x64/-/cli-win32-x64-2.3.11.tgz", { "os": "win32", "cpu": "x64" }, "sha512-43VrG813EW+b5+YbDbz31uUsheX+qFKCpXeY9kfdAx+ww3naKxeVkTD9zLIWxUPfJquANMHrmW3wbe/037G0Qg=="],
+    "@biomejs/cli-win32-x64": ["@biomejs/cli-win32-x64@2.3.12", "https://repo.huaweicloud.com/repository/npm/@biomejs/cli-win32-x64/-/cli-win32-x64-2.3.12.tgz", { "os": "win32", "cpu": "x64" }, "sha512-qqGVWqNNek0KikwPZlOIoxtXgsNGsX+rgdEzgw82Re8nF02W+E2WokaQhpF5TdBh/D/RQ3TLppH+otp6ztN0lw=="],
 
     "@ctrl/tinycolor": ["@ctrl/tinycolor@3.6.1", "https://repo.huaweicloud.com/repository/npm/@ctrl/tinycolor/-/tinycolor-3.6.1.tgz", {}, "sha512-SITSV6aIXsuVNV3f3O0f2n/cgyEDWoSqtZMYiAmcsYHydcKrOz3gUxB/iXd/Qf08+IZX4KpgNbvUdMBmWz+kcA=="],
 
@@ -255,11 +255,11 @@
 
     "@vueuse/shared": ["@vueuse/shared@14.1.0", "https://repo.huaweicloud.com/repository/npm/@vueuse/shared/-/shared-14.1.0.tgz", { "peerDependencies": { "vue": "^3.5.0" } }, "sha512-EcKxtYvn6gx1F8z9J5/rsg3+lTQnvOruQd8fUecW99DCK04BkWD7z5KQ/wTAx+DazyoEE9dJt/zV8OIEQbM6kw=="],
 
-    "ag-charts-types": ["ag-charts-types@13.0.0", "https://repo.huaweicloud.com/repository/npm/ag-charts-types/-/ag-charts-types-13.0.0.tgz", {}, "sha512-mqOmKS0q4s2tt/C+CBG2Z+HWrSKYvRUCAlQzcKXKfARE3v/KdnBuxfjafa2c8ivElTTywdVdOe0q52Cow2Oggw=="],
+    "ag-charts-types": ["ag-charts-types@13.0.1", "https://repo.huaweicloud.com/repository/npm/ag-charts-types/-/ag-charts-types-13.0.1.tgz", {}, "sha512-qg9adyiAaeUaDtWZEEPF45dv55kdJTe6Ghi0EQXCS79h/7KvOd6dxhqGZjPL1zeFl/L9qEXuYgb+LkGStq4mgQ=="],
 
-    "ag-grid-community": ["ag-grid-community@35.0.0", "https://repo.huaweicloud.com/repository/npm/ag-grid-community/-/ag-grid-community-35.0.0.tgz", { "dependencies": { "ag-charts-types": "13.0.0" } }, "sha512-Cz3MA98zZygPwvCi8OKIhP0nea+YXdx8r5MwIXqVqnQwb/BEL05nGxwovIpelL6spv3jNlHQrTVgt4lw9J+nyg=="],
+    "ag-grid-community": ["ag-grid-community@35.0.1", "https://repo.huaweicloud.com/repository/npm/ag-grid-community/-/ag-grid-community-35.0.1.tgz", { "dependencies": { "ag-charts-types": "13.0.1" } }, "sha512-fYYZdymWKsN9/tZv+R6uZRnuiWYEQr+GHl85ZrB0ixbFcE8opYK4NJI29NnMc9ShYiCBnAO9hj54IFa+FI4aDA=="],
 
-    "ag-grid-vue3": ["ag-grid-vue3@35.0.0", "https://repo.huaweicloud.com/repository/npm/ag-grid-vue3/-/ag-grid-vue3-35.0.0.tgz", { "dependencies": { "ag-grid-community": "35.0.0" }, "peerDependencies": { "vue": "^3.5.0" } }, "sha512-R4Y/Ru6Pjwjgw6hWBsm61cav5s/QskkSrwN1uoEeJVWVBM/JggZtDFGo9OhlCocwjn5O8KSFgA+TVnw6iplaSQ=="],
+    "ag-grid-vue3": ["ag-grid-vue3@35.0.1", "https://repo.huaweicloud.com/repository/npm/ag-grid-vue3/-/ag-grid-vue3-35.0.1.tgz", { "dependencies": { "ag-grid-community": "35.0.1" }, "peerDependencies": { "vue": "^3.5.0" } }, "sha512-SE7wZPXiKHXfTSfzJDra+bnN/obmizLCkeri91b8v1Wy7ypza+NqApjMRiXAeZEUCaJqy2ZHv0r/oHIzxx7vJQ=="],
 
     "alien-signals": ["alien-signals@1.0.13", "https://repo.huaweicloud.com/repository/npm/alien-signals/-/alien-signals-1.0.13.tgz", {}, "sha512-OGj9yyTnJEttvzhTUWuscOvtqxq5vrhF7vL9oS0xJ2mK0ItPYP1/y+vCFebfxoEyAz0++1AIwJ5CMr+Fk3nDmg=="],
 
@@ -269,7 +269,7 @@
 
     "balanced-match": ["balanced-match@1.0.2", "https://repo.huaweicloud.com/repository/npm/balanced-match/-/balanced-match-1.0.2.tgz", {}, "sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw=="],
 
-    "baseline-browser-mapping": ["baseline-browser-mapping@2.9.17", "https://repo.huaweicloud.com/repository/npm/baseline-browser-mapping/-/baseline-browser-mapping-2.9.17.tgz", { "bin": { "baseline-browser-mapping": "dist/cli.js" } }, "sha512-agD0MgJFUP/4nvjqzIB29zRPUuCF7Ge6mEv9s8dHrtYD7QWXRcx75rOADE/d5ah1NI+0vkDl0yorDd5U852IQQ=="],
+    "baseline-browser-mapping": ["baseline-browser-mapping@2.9.18", "https://repo.huaweicloud.com/repository/npm/baseline-browser-mapping/-/baseline-browser-mapping-2.9.18.tgz", { "bin": { "baseline-browser-mapping": "dist/cli.js" } }, "sha512-e23vBV1ZLfjb9apvfPk4rHVu2ry6RIr2Wfs+O324okSidrX7pTAnEJPCh/O5BtRlr7QtZI7ktOP3vsqr7Z5XoA=="],
 
     "birpc": ["birpc@2.9.0", "https://repo.huaweicloud.com/repository/npm/birpc/-/birpc-2.9.0.tgz", {}, "sha512-KrayHS5pBi69Xi9JmvoqrIgYGDkD6mcSe/i6YKi3w5kekCLzrX4+nawcXqrj2tIp50Kw/mT/s3p+GVK0A0sKxw=="],
 

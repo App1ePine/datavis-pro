@@ -18,7 +18,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Element Plus（UI 组件库）
 - ag-Grid（高性能数据表格）
 - Pinia（状态管理）
-- @vueuse/core（组合式工具库）
 
 **后端：**
 
@@ -60,19 +59,23 @@ ag-Grid 展示数据（虚拟滚动）
 bun install
 
 # 启动开发服务器（前端 + Tauri）
-bun run tauri dev
+bun run tauri:dev
 
 # 仅启动前端开发服务器
 bun run dev
 
-# 类型检查
-vue-tsc --noEmit
+# 代码格式化
+bun run format
+
+
+# 代码检查并自动修复
+bun run check
 
 # 构建前端
 bun run build
 
 # 构建 Tauri 应用
-bun run tauri build
+bun run tauri:build
 
 # 预览构建结果
 bun run preview
@@ -232,10 +235,22 @@ dist/                  # 前端构建输出（由 Vite 生成）
 
 **前端依赖：**
 
+- `vue`：Vue 3 框架
 - `element-plus`：Vue 3 UI 组件库
 - `ag-grid-vue3` + `ag-grid-community`：企业级数据表格
 - `pinia`：Vue 3 官方状态管理库
+- `@tauri-apps/api`：Tauri API 封装
 - `@tauri-apps/plugin-dialog`：文件选择对话框
+- `@tauri-apps/plugin-opener`：打开外部链接
+
+**开发依赖：**
+
+- `@biomejs/biome`：快速的代码格式化和检查工具
+- `prettier`：代码格式化工具
+- `typescript`：TypeScript 编译器
+- `vue-tsc`：Vue 类型检查工具
+- `vite`：前端构建工具
+- `@vitejs/plugin-vue`：Vite 的 Vue 插件
 
 ## Development Notes
 

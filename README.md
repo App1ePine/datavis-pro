@@ -74,8 +74,8 @@ Vue 3 的现代化前端体验，提供流畅的数据导入、清洗、转换�
 
 ```bash
 # 克隆项目
-git clone <repository-url>
-cd my-data-analyst
+git clone git@github.com:App1ePine/datavis-pro.git
+cd datavis-pro
 
 # 安装前端依赖
 bun install
@@ -89,7 +89,7 @@ cargo build
 
 ```bash
 # 启动开发服务器（前端 + Tauri）
-bun run tauri dev
+bun run tauri:dev
 
 # 仅启动前端开发服务器
 bun run dev
@@ -102,7 +102,7 @@ bun run dev
 bun run build
 
 # 构建 Tauri 应用（生成可执行文件）
-bun run tauri build
+bun run tauri:build
 ```
 
 构建完成后，可执行文件位于 `src-tauri/target/release/bundle/` 目录。
@@ -181,7 +181,7 @@ bun run tauri build
 ## 🏗️ 项目结构
 
 ```
-my-data-analyst/
+datavis-pro/
 ├── src/                          # 前端代码（Vue 3）
 │   ├── App.vue                   # 主应用组件
 │   ├── main.ts                   # 前端入口
@@ -297,10 +297,10 @@ my-data-analyst/
 ### 常用命令
 
 ```bash
-# 类型检查
-bun run vue-tsc --noEmit
+# 代码格式化
+bun run format
 
-# 代码检查和格式化
+# 代码检查并自动修复
 bun run check
 
 # Rust 代码检查
