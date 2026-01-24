@@ -1,0 +1,41 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# 前端依赖和构建输出
+node_modules
+dist
+dist-ssr
+*.local
+
+# Rust 构建输出
+target/
+Cargo.lock
+
+# Tauri 构建输出
+src-tauri/target/
+
+# 编辑器目录和文件
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 环境变量文件
+.env
+.env.local
+.env.*.local
+
+# 临时文件
+*.tmp
+*.temp
+*.swp
+*~
