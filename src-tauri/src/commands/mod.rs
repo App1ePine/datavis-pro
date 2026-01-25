@@ -53,21 +53,25 @@ pub mod operations;
 // - 没有 pub use，需要写：use crate::commands::data_export::export_csv;
 
 /// 这些命令用于将数据导出为 CSV/Parquet 文件，以及清空数据
-pub use data_export::{export_csv, export_parquet, clear_data};
+pub use data_export::{clear_data, export_csv, export_parquet};
 
 /// 这些命令用于查询数据集列表、元信息和实际数据
-pub use data_query::{get_current_data, get_current_info, get_column_stats};
+pub use data_query::{get_column_stats, get_current_data, get_current_info};
 
 /// 这些命令用于导入 CSV、Excel 和 Parquet 文件
 pub use file_import::{import_csv, import_excel, import_parquet};
 
 /// 这些命令用于管理操作历史（undo/redo）
-pub use history::{get_history, get_current_index, undo_operation, redo_operation, jump_to_history, can_undo, can_redo, reset_to_initial};
+pub use history::{
+    can_redo, can_undo, get_current_index, get_history, jump_to_history, redo_operation,
+    reset_to_initial, undo_operation,
+};
 
 /// 这些命令用于数据操作（Phase 1: 基础操作）
 pub use operations::{
-    drop_nulls, drop_all_nulls, select_columns, drop_columns,
-    rename_columns, cast_types, filter_data, fill_null
+    cast_types, drop_all_nulls, drop_columns, drop_nulls, fill_null, filter_data, pivot_data,
+    rename_columns, rolling_average, rolling_max, rolling_median, rolling_min, rolling_quantile,
+    rolling_std, rolling_sum, rolling_var, select_columns, unpivot_data,
 };
 
 // ============================================================================

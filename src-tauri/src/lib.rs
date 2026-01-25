@@ -19,10 +19,10 @@ use std::sync::{Arc, Mutex};
 // 声明模块
 // ============================================================================
 // mod 关键字用于声明模块，Rust 会在同名的文件或文件夹中查找模块内容
-mod error;      // 错误处理模块（error.rs）
-mod models;     // 数据模型模块（models/ 文件夹）
-mod data;       // 数据处理模块（data/ 文件夹）
-mod commands;   // Tauri 命令模块（commands/ 文件夹）
+mod commands; // Tauri 命令模块（commands/ 文件夹）
+mod data; // 数据处理模块（data/ 文件夹）
+mod error; // 错误处理模块（error.rs）
+mod models; // 数据模型模块（models/ 文件夹） 
 
 // ============================================================================
 // 导入模块中的类型和函数
@@ -35,36 +35,46 @@ use data::{DataStore, SharedDataStore};
 // 从 commands 模块导入所有 Tauri 命令函数
 // 这些函数可以被前端 JavaScript/TypeScript 代码调用
 use commands::{
+    can_redo,
+    can_undo,
+    cast_types,
+    clear_data,
+    drop_all_nulls,
+    drop_columns,
+    // 数据操作
+    drop_nulls,
+    // 数据导出
+    export_csv,
+    export_parquet,
+    fill_null,
+    filter_data,
+    get_column_stats,
+    // 数据查询（新架构）
+    get_current_data,
+    get_current_index,
+    get_current_info,
+    // 历史管理
+    get_history,
     // 文件导入
     import_csv,
     import_excel,
     import_parquet,
-    // 数据查询（新架构）
-    get_current_data,
-    get_current_info,
-    get_column_stats,
-    // 历史管理
-    get_history,
-    get_current_index,
-    undo_operation,
-    redo_operation,
     jump_to_history,
-    can_undo,
-    can_redo,
-    reset_to_initial,
-    // 数据操作
-    drop_nulls,
-    drop_all_nulls,
-    select_columns,
-    drop_columns,
+    pivot_data,
+    redo_operation,
     rename_columns,
-    cast_types,
-    filter_data,
-    fill_null,
-    // 数据导出
-    export_csv,
-    export_parquet,
-    clear_data,
+    reset_to_initial,
+    rolling_average,
+    rolling_max,
+    rolling_median,
+    rolling_min,
+    rolling_quantile,
+    rolling_std,
+    rolling_sum,
+    rolling_var,
+    select_columns,
+    undo_operation,
+    unpivot_data,
 };
 
 // ============================================================================
@@ -121,26 +131,21 @@ pub fn run() {
     tauri::Builder::default()
         // 注册插件：opener 插件用于在默认浏览器中打开 URL
         .plugin(tauri_plugin_opener::init())
-
         // 注册插件：dialog 插件用于显示文件选择对话框
         .plugin(tauri_plugin_dialog::init())
-
         // 管理应用状态：将 AppState 注册到 Tauri
         // 这样所有的命令都可以通过 State 参数访问这个状态
         .manage(AppState { data_store })
-
         // 注册命令处理器：告诉 Tauri 哪些函数可以被前端调用
         .invoke_handler(tauri::generate_handler![
             // 文件导入命令
             import_csv,
             import_excel,
             import_parquet,
-
             // 数据查询命令（新架构）
             get_current_data,
             get_current_info,
             get_column_stats,
-
             // 历史管理命令
             get_history,
             get_current_index,
@@ -150,7 +155,6 @@ pub fn run() {
             can_undo,
             can_redo,
             reset_to_initial,
-
             // 数据操作命令
             drop_nulls,
             drop_all_nulls,
@@ -160,17 +164,24 @@ pub fn run() {
             cast_types,
             filter_data,
             fill_null,
-
+            unpivot_data,
+            pivot_data,
+            rolling_average,
+            rolling_median,
+            rolling_sum,
+            rolling_min,
+            rolling_max,
+            rolling_std,
+            rolling_var,
+            rolling_quantile,
             // 数据导出命令
             export_csv,
             export_parquet,
             clear_data,
         ])
-
         // 运行应用
         // tauri::generate_context!() 生成应用上下文（从 tauri.conf.json 读取配置）
         .run(tauri::generate_context!())
-
         // 如果运行失败，程序会 panic（崩溃）并显示错误信息
         .expect("error while running tauri application");
 }

@@ -41,6 +41,9 @@ export const useDataStore = defineStore('data', () => {
     return history.value[currentIndex.value]?.metadata || null;
   });
 
+  /** 当前数据集元信息 */
+  const currentInfo = computed(() => currentDataset.value);
+
   /** 是否有数据 */
   const hasData = computed(() => currentDataset.value !== null);
 
@@ -201,6 +204,16 @@ export const useDataStore = defineStore('data', () => {
     } catch (e) {
       error.value = String(e);
       throw e;
+    }
+  }
+
+  /**
+   * 刷新当前数据（用于操作后重新加载）
+   */
+  async function refreshCurrentData() {
+    await loadHistory();
+    if (currentDataset.value) {
+      await loadCurrentData(0, 100);
     }
   }
 
@@ -513,6 +526,7 @@ export const useDataStore = defineStore('data', () => {
 
     // 计算属性
     currentDataset,
+    currentInfo,
     hasData,
 
     // 历史管理
@@ -526,6 +540,7 @@ export const useDataStore = defineStore('data', () => {
 
     // 数据加载
     loadCurrentData,
+    refreshCurrentData,
     loadColumnStats,
 
     // 文件导入

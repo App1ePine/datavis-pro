@@ -37,7 +37,7 @@ pub enum OperationType {
     /// 导入文件操作
     Import { file_path: String },
 
-    /// 纵表转横表（Unpivot/Melt）
+    /// 横表转纵表（Unpivot/Melt）
     /// 将宽格式转为长格式
     ///
     /// 参数：
@@ -48,9 +48,10 @@ pub enum OperationType {
         value_vars: Vec<String>,
         variable_name: String,
         value_name: String,
+        sort_column: Option<String>,
     },
 
-    /// 横表转纵表（Pivot）
+    /// 纵表转横表（Pivot）
     /// 将长格式转为宽格式
     ///
     /// 参数：
@@ -111,18 +112,69 @@ pub enum OperationType {
     FillNull { strategy: FillStrategy },
 
     /// 移动平均
-    ///
-    /// 参数：
-    /// - column: 要计算的列名
-    /// - window_size: 窗口大小
-    RollingAverage { column: String, window_size: usize },
+    RollingAverage {
+        column: String,
+        window_size: usize,
+        center: bool,
+        min_periods: Option<usize>,
+    },
 
     /// 移动中位数
-    ///
-    /// 参数：
-    /// - column: 要计算的列名
-    /// - window_size: 窗口大小
-    RollingMedian { column: String, window_size: usize },
+    RollingMedian {
+        column: String,
+        window_size: usize,
+        center: bool,
+        min_periods: Option<usize>,
+    },
+
+    /// 移动求和
+    RollingSum {
+        column: String,
+        window_size: usize,
+        center: bool,
+        min_periods: Option<usize>,
+    },
+
+    /// 移动最小值
+    RollingMin {
+        column: String,
+        window_size: usize,
+        center: bool,
+        min_periods: Option<usize>,
+    },
+
+    /// 移动最大值
+    RollingMax {
+        column: String,
+        window_size: usize,
+        center: bool,
+        min_periods: Option<usize>,
+    },
+
+    /// 移动标准差
+    RollingStd {
+        column: String,
+        window_size: usize,
+        center: bool,
+        min_periods: Option<usize>,
+    },
+
+    /// 移动方差
+    RollingVar {
+        column: String,
+        window_size: usize,
+        center: bool,
+        min_periods: Option<usize>,
+    },
+
+    /// 移动分位数
+    RollingQuantile {
+        column: String,
+        window_size: usize,
+        quantile: f64,
+        center: bool,
+        min_periods: Option<usize>,
+    },
 }
 
 // ============================================================================
@@ -247,13 +299,19 @@ impl OperationType {
             OperationType::Unpivot {
                 id_vars,
                 value_vars,
+                sort_column,
                 ..
             } => {
-                format!(
-                    "纵表转横表 (标识列: {}, 值列: {})",
+                let base = format!(
+                    "横表转纵表 (标识列: {}, 值列: {})",
                     id_vars.len(),
                     value_vars.len()
-                )
+                );
+                if let Some(sort_col) = sort_column {
+                    format!("{} [按 {} 排序]", base, sort_col)
+                } else {
+                    base
+                }
             }
             OperationType::Pivot {
                 index,
@@ -261,7 +319,7 @@ impl OperationType {
                 values,
             } => {
                 format!(
-                    "横表转纵表 (索引: {}, 列: {}, 值: {})",
+                    "纵表转横表 (索引: {}, 列: {}, 值: {})",
                     index.join(", "),
                     columns,
                     values
@@ -305,14 +363,108 @@ impl OperationType {
             OperationType::RollingAverage {
                 column,
                 window_size,
+                center,
+                min_periods,
             } => {
-                format!("移动平均 (列: {}, 窗口: {})", column, window_size)
+                let center_str = if *center { "是" } else { "否" };
+                let min_p = min_periods.unwrap_or(1);
+                format!(
+                    "移动平均 (列: {}, 窗口: {}, 居中: {}, 最小样本: {})",
+                    column, window_size, center_str, min_p
+                )
             }
             OperationType::RollingMedian {
                 column,
                 window_size,
+                center,
+                min_periods,
             } => {
-                format!("移动中位数 (列: {}, 窗口: {})", column, window_size)
+                let center_str = if *center { "是" } else { "否" };
+                let min_p = min_periods.unwrap_or(1);
+                format!(
+                    "移动中位数 (列: {}, 窗口: {}, 居中: {}, 最小样本: {})",
+                    column, window_size, center_str, min_p
+                )
+            }
+            OperationType::RollingSum {
+                column,
+                window_size,
+                center,
+                min_periods,
+            } => {
+                let center_str = if *center { "是" } else { "否" };
+                let min_p = min_periods.unwrap_or(1);
+                format!(
+                    "移动求和 (列: {}, 窗口: {}, 居中: {}, 最小样本: {})",
+                    column, window_size, center_str, min_p
+                )
+            }
+            OperationType::RollingMin {
+                column,
+                window_size,
+                center,
+                min_periods,
+            } => {
+                let center_str = if *center { "是" } else { "否" };
+                let min_p = min_periods.unwrap_or(1);
+                format!(
+                    "移动最小值 (列: {}, 窗口: {}, 居中: {}, 最小样本: {})",
+                    column, window_size, center_str, min_p
+                )
+            }
+            OperationType::RollingMax {
+                column,
+                window_size,
+                center,
+                min_periods,
+            } => {
+                let center_str = if *center { "是" } else { "否" };
+                let min_p = min_periods.unwrap_or(1);
+                format!(
+                    "移动最大值 (列: {}, 窗口: {}, 居中: {}, 最小样本: {})",
+                    column, window_size, center_str, min_p
+                )
+            }
+            OperationType::RollingStd {
+                column,
+                window_size,
+                center,
+                min_periods,
+            } => {
+                let center_str = if *center { "是" } else { "否" };
+                let min_p = min_periods.unwrap_or(1);
+                format!(
+                    "移动标准差 (列: {}, 窗口: {}, 居中: {}, 最小样本: {})",
+                    column, window_size, center_str, min_p
+                )
+            }
+            OperationType::RollingVar {
+                column,
+                window_size,
+                center,
+                min_periods,
+            } => {
+                let center_str = if *center { "是" } else { "否" };
+                let min_p = min_periods.unwrap_or(1);
+                format!(
+                    "移动方差 (列: {}, 窗口: {}, 居中: {}, 最小样本: {})",
+                    column, window_size, center_str, min_p
+                )
+            }
+
+            OperationType::RollingQuantile {
+                column,
+                window_size,
+                quantile,
+                center,
+                min_periods,
+            } => {
+                let center_str = if *center { "是" } else { "否" };
+                let min_p = min_periods.unwrap_or(1);
+                format!(
+                    "移动分位数 (列: {}, 窗口: {}, 分位: {}, 居中: {}, 最小样本: {})",
+                    column, window_size, quantile, center_str, min_p
+                )
             }
         }
     }
