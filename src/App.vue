@@ -227,7 +227,12 @@ async function handleClearData() {
 </script>
 
 <template>
-  <el-container class="app-container" v-loading="dataStore.loading" :element-loading-text="loadingText" element-loading-background="rgba(0, 0, 0, 0.7)">
+  <el-container
+    class="app-container"
+    v-loading="dataStore.loading"
+    :element-loading-text="loadingText"
+    element-loading-background="rgba(0, 0, 0, 0.7)"
+  >
     <!-- Header -->
     <el-header class="app-header" height="56px">
       <div class="header-left">
@@ -235,9 +240,7 @@ async function handleClearData() {
         <el-tag type="info" size="small">v0.1.0</el-tag>
       </div>
       <div class="header-right">
-        <el-button type="primary" plain :icon="Upload" @click="handleImportData">
-          导入数据
-        </el-button>
+        <el-button type="primary" plain :icon="Upload" @click="handleImportData"> 导入数据 </el-button>
         <el-button type="success" plain :icon="Download" @click="handleExportData" :disabled="!hasData">
           导出数据
         </el-button>
@@ -281,10 +284,7 @@ async function handleClearData() {
     </el-container>
 
     <!-- 导出对话框 -->
-    <ExportDialog
-      v-model:visible="exportDialogVisible"
-      @confirm="handleExportConfirm"
-    />
+    <ExportDialog v-model:visible="exportDialogVisible" @confirm="handleExportConfirm" />
   </el-container>
 </template>
 

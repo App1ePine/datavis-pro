@@ -1,18 +1,14 @@
 <template>
   <el-dialog
     :model-value="visible"
-    title="更改列类型"
+    title="更改列类型 - Cast Column Types"
     width="700px"
     @close="handleClose"
+    align-center
   >
     <!-- 搜索栏 -->
     <div class="dialog-toolbar">
-      <el-input
-        v-model="searchText"
-        placeholder="搜索列名..."
-        clearable
-        style="width: 300px"
-      >
+      <el-input v-model="searchText" placeholder="搜索列名..." clearable style="width: 300px">
         <template #prefix>
           <el-icon><Search /></el-icon>
         </template>
@@ -35,11 +31,7 @@
           </el-table-column>
           <el-table-column label="目标类型">
             <template #default="{ row }">
-              <el-select
-                v-model="typeMap[row.name]"
-                placeholder="选择类型"
-                style="width: 100%"
-              >
+              <el-select v-model="typeMap[row.name]" placeholder="选择类型" style="width: 100%">
                 <el-option
                   v-for="type in availableTypes"
                   :key="type.value"
@@ -48,38 +40,22 @@
                   :disabled="type.value === row.dtype"
                 >
                   <span>{{ type.label }}</span>
-                  <span v-if="type.value === row.dtype" style="color: #909399; margin-left: 8px">
-                    (当前)
-                  </span>
+                  <span v-if="type.value === row.dtype" style="color: #909399; margin-left: 8px"> (当前) </span>
                 </el-option>
               </el-select>
             </template>
           </el-table-column>
         </el-table>
-        <el-empty
-          v-if="filteredColumns.length === 0"
-          description="没有找到匹配的列"
-          :image-size="80"
-        />
+        <el-empty v-if="filteredColumns.length === 0" description="没有找到匹配的列" :image-size="80" />
       </el-scrollbar>
     </div>
 
     <!-- 底部信息 -->
     <div class="dialog-footer-info">
-      <span class="info-text">
-        已修改 {{ changedCount }} / {{ columns.length }} 列
-      </span>
-      <el-alert
-        v-if="changedCount > 0"
-        type="warning"
-        :closable="false"
-        show-icon
-        style="margin-top: 12px"
-      >
+      <span class="info-text"> 已修改 {{ changedCount }} / {{ columns.length }} 列 </span>
+      <el-alert v-if="changedCount > 0" type="warning" :closable="false" show-icon style="margin-top: 12px">
         <template #title>
-          <span style="font-size: 13px">
-            类型转换可能失败，请确保数据格式正确
-          </span>
+          <span style="font-size: 13px"> 类型转换可能失败，请确保数据格式正确 </span>
         </template>
       </el-alert>
     </div>
@@ -87,13 +63,7 @@
     <!-- 操作按钮 -->
     <template #footer>
       <el-button @click="handleClose">取消</el-button>
-      <el-button
-        type="primary"
-        :disabled="changedCount === 0"
-        @click="handleConfirm"
-      >
-        确定
-      </el-button>
+      <el-button type="primary" :disabled="changedCount === 0" @click="handleConfirm"> 确认操作 </el-button>
     </template>
   </el-dialog>
 </template>

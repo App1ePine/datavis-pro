@@ -1,10 +1,11 @@
 <template>
   <el-dialog
     :model-value="visible"
-    title="填充空值"
+    title="填充空值 - Fill Null Values"
     width="600px"
     @update:model-value="(val: boolean) => $emit('update:visible', val)"
     @close="handleClose"
+    align-center
   >
     <div class="fill-null-content">
       <!-- 策略选择 -->
@@ -64,13 +65,7 @@
         </h4>
 
         <!-- 搜索框 -->
-        <el-input
-          v-model="searchText"
-          placeholder="搜索列名..."
-          :prefix-icon="Search"
-          clearable
-          class="search-input"
-        />
+        <el-input v-model="searchText" placeholder="搜索列名..." :prefix-icon="Search" clearable class="search-input" />
 
         <!-- 列选择列表 -->
         <div class="columns-list">
@@ -107,13 +102,7 @@
 
     <template #footer>
       <el-button @click="handleClose">取消</el-button>
-      <el-button
-        type="primary"
-        @click="handleConfirm"
-        :disabled="selectedColumns.length === 0"
-      >
-        确定填充
-      </el-button>
+      <el-button type="primary" @click="handleConfirm" :disabled="selectedColumns.length === 0"> 确认填充 </el-button>
     </template>
   </el-dialog>
 </template>

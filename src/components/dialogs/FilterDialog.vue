@@ -1,19 +1,15 @@
 <template>
   <el-dialog
     :model-value="visible"
-    title="筛选过滤"
+    title="筛选过滤 - Filter Data"
     width="700px"
     @update:model-value="(val: boolean) => $emit('update:visible', val)"
     @close="handleClose"
+    align-center
   >
     <div class="filter-content">
       <!-- 说明 -->
-      <el-alert
-        title="使用 SQL WHERE 条件进行数据筛选"
-        type="info"
-        :closable="false"
-        show-icon
-      >
+      <el-alert title="使用 SQL WHERE 条件进行数据筛选" type="info" :closable="false" show-icon>
         <template #default>
           <div class="alert-content">
             <p>支持标准 SQL WHERE 语法，示例：</p>
@@ -49,13 +45,7 @@
         </h4>
 
         <!-- 搜索框 -->
-        <el-input
-          v-model="searchText"
-          placeholder="搜索列名..."
-          :prefix-icon="Search"
-          clearable
-          class="search-input"
-        />
+        <el-input v-model="searchText" placeholder="搜索列名..." :prefix-icon="Search" clearable class="search-input" />
 
         <!-- 列列表 -->
         <div class="columns-list">
@@ -95,9 +85,7 @@
 
     <template #footer>
       <el-button @click="handleClose">取消</el-button>
-      <el-button type="primary" @click="handleConfirm" :disabled="!expression.trim()">
-        确定筛选
-      </el-button>
+      <el-button type="primary" @click="handleConfirm" :disabled="!expression.trim()"> 确认筛选 </el-button>
     </template>
   </el-dialog>
 </template>
@@ -246,7 +234,7 @@ function handleConfirm() {
   overflow-y: auto;
   border: 1px solid #e4e7ed;
   border-radius: 4px;
-  padding: 8px;
+  padding: 0;
   background-color: #fafafa;
 }
 
@@ -255,9 +243,13 @@ function handleConfirm() {
   align-items: center;
   justify-content: space-between;
   padding: 8px 12px;
-  border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.2s;
+  border-bottom: 1px solid #ebeef5;
+}
+
+.column-item:last-child {
+  border-bottom: none;
 }
 
 .column-item:hover {

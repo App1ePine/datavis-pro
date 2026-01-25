@@ -90,7 +90,9 @@
             <div class="quality-item">
               <span class="quality-label">缺失值 (Null):</span>
               <span class="quality-value" :class="columnStats.null_count === 0 ? 'success' : 'error'">
-                {{ columnStats.null_count }} ({{ ((columnStats.null_count / columnStats.total_count) * 100).toFixed(1) }}%)
+                {{ columnStats.null_count }} ({{
+                  ((columnStats.null_count / columnStats.total_count) * 100).toFixed(1)
+                }}%)
               </span>
             </div>
             <div class="quality-item">
@@ -101,7 +103,9 @@
         </template>
       </div>
 
-      <el-empty v-else description="请点击表格中的任意单元格查看列统计信息" :image-size="100" />
+      <div v-else class="empty-container">
+        <el-empty description="请点击表格中的任意单元格查看列统计信息" :image-size="100" />
+      </div>
     </el-scrollbar>
   </div>
 </template>
@@ -196,6 +200,17 @@ const hasQualityStats = computed(() => {
 .sidebar-content {
   flex: 1;
   height: 0;
+}
+
+.sidebar-content :deep(.el-scrollbar__view) {
+  height: 100%;
+}
+
+.empty-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .stats-section {

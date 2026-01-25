@@ -52,11 +52,14 @@
           <!-- 数据转换 -->
           <el-collapse-item title="数据转换" name="2">
             <div class="operation-list">
-              <el-button size="small" class="operation-btn" @click="handlePlaceholder('横转纵')" :disabled="!hasData">
-                🔃 横转纵
+              <el-button size="small" class="operation-btn" @click="showPivotDialog" :disabled="!hasData">
+                🔃 长表转宽表
               </el-button>
-              <el-button size="small" class="operation-btn" @click="handlePlaceholder('纵转横')" :disabled="!hasData">
-                🔄 纵转横
+              <el-button size="small" class="operation-btn" @click="showUnpivotDialog" :disabled="!hasData">
+                🔄 宽表转长表
+              </el-button>
+              <el-button size="small" class="operation-btn" @click="showRollingDialog" :disabled="!hasData">
+                📊 滑动窗口
               </el-button>
               <el-button size="small" class="operation-btn" @click="handlePlaceholder('排序')" :disabled="!hasData">
                 📶 排序
@@ -101,6 +104,12 @@
     <FilterDialog v-model:visible="filterVisible" :columns="currentColumns" @confirm="handleFilterConfirm" />
 
     <FillNullDialog v-model:visible="fillNullVisible" :columns="currentColumns" @confirm="handleFillNullConfirm" />
+
+    <PivotDialog v-model:visible="pivotVisible" />
+
+    <UnpivotDialog v-model:visible="unpivotVisible" />
+
+    <RollingDialog v-model:visible="rollingVisible" />
   </div>
 </template>
 
@@ -113,7 +122,10 @@ import CastTypesDialog from './dialogs/CastTypesDialog.vue';
 import ColumnSelectionDialog from './dialogs/ColumnSelectionDialog.vue';
 import FillNullDialog from './dialogs/FillNullDialog.vue';
 import FilterDialog from './dialogs/FilterDialog.vue';
+import PivotDialog from './dialogs/PivotDialog.vue';
 import RenameColumnsDialog from './dialogs/RenameColumnsDialog.vue';
+import RollingDialog from './dialogs/RollingDialog.vue';
+import UnpivotDialog from './dialogs/UnpivotDialog.vue';
 
 const dataStore = useDataStore();
 const activeNames = ref(['1', '2', '3']);
@@ -133,6 +145,9 @@ const renameColumnsVisible = ref(false);
 const castTypesVisible = ref(false);
 const filterVisible = ref(false);
 const fillNullVisible = ref(false);
+const pivotVisible = ref(false);
+const unpivotVisible = ref(false);
+const rollingVisible = ref(false);
 
 // Undo/Redo 操作
 async function handleUndo() {
@@ -226,6 +241,18 @@ function showRenameColumnsDialog() {
 
 function showCastTypesDialog() {
   castTypesVisible.value = true;
+}
+
+function showPivotDialog() {
+  pivotVisible.value = true;
+}
+
+function showUnpivotDialog() {
+  unpivotVisible.value = true;
+}
+
+function showRollingDialog() {
+  rollingVisible.value = true;
 }
 
 // 对话框确认处理

@@ -1,18 +1,8 @@
 <template>
-  <el-dialog
-    :model-value="visible"
-    title="重命名列"
-    width="700px"
-    @close="handleClose"
-  >
+  <el-dialog :model-value="visible" title="重命名列 - Rename Columns" width="700px" @close="handleClose" align-center>
     <!-- 搜索栏 -->
     <div class="dialog-toolbar">
-      <el-input
-        v-model="searchText"
-        placeholder="搜索列名..."
-        clearable
-        style="width: 300px"
-      >
+      <el-input v-model="searchText" placeholder="搜索列名..." clearable style="width: 300px">
         <template #prefix>
           <el-icon><Search /></el-icon>
         </template>
@@ -56,33 +46,21 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-empty
-          v-if="filteredColumns.length === 0"
-          description="没有找到匹配的列"
-          :image-size="80"
-        />
+        <el-empty v-if="filteredColumns.length === 0" description="没有找到匹配的列" :image-size="80" />
       </el-scrollbar>
     </div>
 
     <!-- 底部信息 -->
     <div class="dialog-footer-info">
-      <span class="info-text">
-        已修改 {{ changedCount }} / {{ columns.length }} 列
-      </span>
-      <span v-if="hasAnyError" class="error-text">
-        ⚠️ 存在重复或无效的列名
-      </span>
+      <span class="info-text"> 已修改 {{ changedCount }} / {{ columns.length }} 列 </span>
+      <span v-if="hasAnyError" class="error-text"> ⚠️ 存在重复或无效的列名 </span>
     </div>
 
     <!-- 操作按钮 -->
     <template #footer>
       <el-button @click="handleClose">取消</el-button>
-      <el-button
-        type="primary"
-        :disabled="changedCount === 0 || hasAnyError"
-        @click="handleConfirm"
-      >
-        确定
+      <el-button type="primary" :disabled="changedCount === 0 || hasAnyError" @click="handleConfirm">
+        确认操作
       </el-button>
     </template>
   </el-dialog>

@@ -1,12 +1,5 @@
 <template>
-  <el-button
-    type="primary"
-    @click="selectFile"
-    :loading="loading"
-    :icon="Upload"
-  >
-    导入 CSV/Excel
-  </el-button>
+  <el-button type="primary" @click="selectFile" :loading="loading" :icon="Upload"> 导入数据文件 </el-button>
 </template>
 
 <script setup lang="ts">
@@ -26,7 +19,7 @@ async function selectFile() {
       filters: [
         {
           name: '数据文件',
-          extensions: ['csv', 'xlsx', 'xls'],
+          extensions: ['csv', 'xlsx', 'xls', 'parquet'],
         },
       ],
     });
@@ -44,6 +37,9 @@ async function selectFile() {
     } else if (filePath.endsWith('.xlsx') || filePath.endsWith('.xls')) {
       await dataStore.importExcel(filePath);
       ElMessage.success('Excel 文件导入成功');
+    } else if (filePath.endsWith('.parquet')) {
+      await dataStore.importParquet(filePath);
+      ElMessage.success('Parquet 文件导入成功');
     } else {
       ElMessage.error('不支持的文件格式');
     }

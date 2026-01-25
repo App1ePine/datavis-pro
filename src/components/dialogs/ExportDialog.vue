@@ -1,21 +1,18 @@
 <template>
   <el-dialog
     :model-value="visible"
-    title="导出数据"
+    title="导出数据 - Export Data"
     width="500px"
     @update:model-value="(val: boolean) => $emit('update:visible', val)"
     @close="handleClose"
+    align-center
   >
     <div class="export-content">
       <!-- 格式选择 -->
       <div class="format-section">
         <h4 class="section-title">选择导出格式</h4>
         <div class="format-grid">
-          <div
-            class="format-card"
-            :class="{ active: selectedFormat === 'csv' }"
-            @click="selectedFormat = 'csv'"
-          >
+          <div class="format-card" :class="{ active: selectedFormat === 'csv' }" @click="selectedFormat = 'csv'">
             <div class="format-icon">📄</div>
             <div class="format-name">CSV</div>
             <div class="format-desc">通用表格格式</div>
@@ -33,22 +30,12 @@
       </div>
 
       <!-- 格式说明 -->
-      <el-alert
-        v-if="selectedFormat === 'csv'"
-        type="info"
-        :closable="false"
-        show-icon
-      >
+      <el-alert v-if="selectedFormat === 'csv'" type="info" :closable="false" show-icon>
         <template #default>
           <strong>CSV 格式：</strong>纯文本格式，兼容性好，可用 Excel 直接打开，但文件较大。
         </template>
       </el-alert>
-      <el-alert
-        v-if="selectedFormat === 'parquet'"
-        type="info"
-        :closable="false"
-        show-icon
-      >
+      <el-alert v-if="selectedFormat === 'parquet'" type="info" :closable="false" show-icon>
         <template #default>
           <strong>Parquet 格式：</strong>列式存储，压缩率高，适合大数据处理，需要专业工具读取。
         </template>
@@ -57,9 +44,7 @@
 
     <template #footer>
       <el-button @click="handleClose">取消</el-button>
-      <el-button type="primary" @click="handleConfirm">
-        确定导出
-      </el-button>
+      <el-button type="primary" @click="handleConfirm"> 确认导出 </el-button>
     </template>
   </el-dialog>
 </template>

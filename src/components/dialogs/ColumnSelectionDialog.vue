@@ -1,18 +1,8 @@
 <template>
-  <el-dialog
-    :model-value="visible"
-    :title="dialogTitle"
-    width="600px"
-    @close="handleClose"
-  >
+  <el-dialog :model-value="visible" :title="dialogTitle" width="600px" @close="handleClose" align-center>
     <!-- 搜索和操作栏 -->
     <div class="dialog-toolbar">
-      <el-input
-        v-model="searchText"
-        placeholder="搜索列名..."
-        clearable
-        style="width: 300px"
-      >
+      <el-input v-model="searchText" placeholder="搜索列名..." clearable style="width: 300px">
         <template #prefix>
           <el-icon><Search /></el-icon>
         </template>
@@ -25,46 +15,32 @@
 
     <!-- 列列表 -->
     <div class="column-list">
-      <el-scrollbar height="400px">
+      <el-scrollbar>
         <el-checkbox-group v-model="selectedColumns">
-          <div
-            v-for="column in filteredColumns"
-            :key="column.name"
-            class="column-item"
-          >
+          <div v-for="column in filteredColumns" :key="column.name" class="column-item">
             <el-checkbox :label="column.name">
-              <span class="column-name">{{ column.name }}</span>
-              <el-tag size="small" type="info" class="column-type">
-                {{ column.dtype }}
-              </el-tag>
+              <div class="checkbox-content">
+                <span class="column-name">{{ column.name }}</span>
+                <el-tag size="small" type="info" class="column-type">
+                  {{ column.dtype }}
+                </el-tag>
+              </div>
             </el-checkbox>
           </div>
         </el-checkbox-group>
-        <el-empty
-          v-if="filteredColumns.length === 0"
-          description="没有找到匹配的列"
-          :image-size="80"
-        />
+        <el-empty v-if="filteredColumns.length === 0" description="没有找到匹配的列" :image-size="80" />
       </el-scrollbar>
     </div>
 
     <!-- 底部信息 -->
     <div class="dialog-footer-info">
-      <span class="info-text">
-        已选择 {{ selectedColumns.length }} / {{ columns.length }} 列
-      </span>
+      <span class="info-text"> 已选择 {{ selectedColumns.length }} / {{ columns.length }} 列 </span>
     </div>
 
     <!-- 操作按钮 -->
     <template #footer>
       <el-button @click="handleClose">取消</el-button>
-      <el-button
-        type="primary"
-        :disabled="selectedColumns.length === 0"
-        @click="handleConfirm"
-      >
-        确定
-      </el-button>
+      <el-button type="primary" :disabled="isConfirmDisabled" @click="handleConfirm"> 确认操作 </el-button>
     </template>
   </el-dialog>
 </template>
@@ -96,7 +72,7 @@ const selectedColumns = ref<string[]>([]);
 
 // 对话框标题
 const dialogTitle = computed(() => {
-  return props.mode === 'select' ? '选择列' : '删除列';
+  return props.mode === 'select' ? '选择列 - Select Columns' : '删除列 - Drop Columns';
 });
 
 // 过滤后的列
@@ -137,6 +113,17 @@ function handleClose() {
   selectedColumns.value = [];
 }
 
+// 确认按钮是否禁用
+const isConfirmDisabled = computed(() => {
+  if (props.mode === 'select') {
+    // 选择模式：必须选择至少一列，且不能选择所有列
+    return selectedColumns.value.length === 0 || selectedColumns.value.length === props.columns.length;
+  } else {
+    // 删除模式：必须选择至少一列删除，且不能选择所有列
+    return selectedColumns.value.length === 0 || selectedColumns.value.length === props.columns.length;
+  }
+});
+
 // 确认操作
 function handleConfirm() {
   emit('confirm', selectedColumns.value);
@@ -176,6 +163,10 @@ watch(
   border: 1px solid #e4e7ed;
   border-radius: 4px;
   background-color: #fafafa;
+}
+
+.column-list > .el-scrollbar {
+  max-height: 400px;
 }
 
 .column-item {
@@ -223,5 +214,13 @@ watch(
   flex: 1;
   display: flex;
   align-items: center;
+  width: 100%;
+}
+
+.checkbox-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 </style>
