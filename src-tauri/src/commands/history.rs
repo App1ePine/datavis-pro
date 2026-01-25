@@ -21,11 +21,10 @@ use tauri::State;
 /// 返回：
 /// - Result<Vec<HistoryEntryInfo>, String>: 历史列表或错误消息
 #[tauri::command]
-pub async fn get_history(
-    state: State<'_, AppState>,
-) -> Result<Vec<HistoryEntryInfo>, String> {
+pub async fn get_history(state: State<'_, AppState>) -> Result<Vec<HistoryEntryInfo>, String> {
     // 获取数据存储的锁
-    let store = state.data_store
+    let store = state
+        .data_store
         .lock()
         .map_err(|e| format!("Failed to lock data store: {}", e))?;
 
@@ -43,10 +42,9 @@ pub async fn get_history(
 /// 返回：
 /// - Result<Option<usize>, String>: 当前索引或 None（没有数据）
 #[tauri::command]
-pub async fn get_current_index(
-    state: State<'_, AppState>,
-) -> Result<Option<usize>, String> {
-    let store = state.data_store
+pub async fn get_current_index(state: State<'_, AppState>) -> Result<Option<usize>, String> {
+    let store = state
+        .data_store
         .lock()
         .map_err(|e| format!("Failed to lock data store: {}", e))?;
 
@@ -63,10 +61,9 @@ pub async fn get_current_index(
 /// 返回：
 /// - Result<(), String>: 成功或错误消息
 #[tauri::command]
-pub async fn undo_operation(
-    state: State<'_, AppState>,
-) -> Result<(), String> {
-    let mut store = state.data_store
+pub async fn undo_operation(state: State<'_, AppState>) -> Result<(), String> {
+    let mut store = state
+        .data_store
         .lock()
         .map_err(|e| format!("Failed to lock data store: {}", e))?;
 
@@ -85,10 +82,9 @@ pub async fn undo_operation(
 /// 返回：
 /// - Result<(), String>: 成功或错误消息
 #[tauri::command]
-pub async fn redo_operation(
-    state: State<'_, AppState>,
-) -> Result<(), String> {
-    let mut store = state.data_store
+pub async fn redo_operation(state: State<'_, AppState>) -> Result<(), String> {
+    let mut store = state
+        .data_store
         .lock()
         .map_err(|e| format!("Failed to lock data store: {}", e))?;
 
@@ -108,11 +104,9 @@ pub async fn redo_operation(
 /// 返回：
 /// - Result<(), String>: 成功或错误消息
 #[tauri::command]
-pub async fn jump_to_history(
-    entry_id: String,
-    state: State<'_, AppState>,
-) -> Result<(), String> {
-    let mut store = state.data_store
+pub async fn jump_to_history(entry_id: String, state: State<'_, AppState>) -> Result<(), String> {
+    let mut store = state
+        .data_store
         .lock()
         .map_err(|e| format!("Failed to lock data store: {}", e))?;
 
@@ -129,10 +123,9 @@ pub async fn jump_to_history(
 /// 返回：
 /// - Result<bool, String>: 是否可以撤销
 #[tauri::command]
-pub async fn can_undo(
-    state: State<'_, AppState>,
-) -> Result<bool, String> {
-    let store = state.data_store
+pub async fn can_undo(state: State<'_, AppState>) -> Result<bool, String> {
+    let store = state
+        .data_store
         .lock()
         .map_err(|e| format!("Failed to lock data store: {}", e))?;
 
@@ -144,10 +137,9 @@ pub async fn can_undo(
 /// 返回：
 /// - Result<bool, String>: 是否可以重做
 #[tauri::command]
-pub async fn can_redo(
-    state: State<'_, AppState>,
-) -> Result<bool, String> {
-    let store = state.data_store
+pub async fn can_redo(state: State<'_, AppState>) -> Result<bool, String> {
+    let store = state
+        .data_store
         .lock()
         .map_err(|e| format!("Failed to lock data store: {}", e))?;
 
@@ -162,10 +154,9 @@ pub async fn can_redo(
 /// 返回：
 /// - Result<(), String>: 成功或错误消息
 #[tauri::command]
-pub async fn reset_to_initial(
-    state: State<'_, AppState>,
-) -> Result<(), String> {
-    let mut store = state.data_store
+pub async fn reset_to_initial(state: State<'_, AppState>) -> Result<(), String> {
+    let mut store = state
+        .data_store
         .lock()
         .map_err(|e| format!("Failed to lock data store: {}", e))?;
 

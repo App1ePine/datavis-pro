@@ -63,15 +63,15 @@ pub use file_import::{import_csv, import_excel, import_parquet};
 
 /// 这些命令用于管理操作历史（undo/redo）
 pub use history::{
-    can_redo, can_undo, get_current_index, get_history, jump_to_history, redo_operation,
-    reset_to_initial, undo_operation,
+    can_redo, can_undo, get_current_index, get_history, jump_to_history, redo_operation, reset_to_initial,
+    undo_operation,
 };
 
 /// 这些命令用于数据操作（Phase 1: 基础操作）
 pub use operations::{
-    cast_types, drop_all_nulls, drop_columns, drop_nulls, fill_null, filter_data, pivot_data,
-    rename_columns, rolling_average, rolling_max, rolling_median, rolling_min, rolling_quantile,
-    rolling_std, rolling_sum, rolling_var, select_columns, unpivot_data,
+    cast_types, drop_all_nulls, drop_columns, drop_nulls, fill_null, filter_data, pivot_data, rename_columns,
+    rolling_average, rolling_max, rolling_median, rolling_min, rolling_quantile, rolling_std, rolling_sum, rolling_var,
+    select_columns, unpivot_data,
 };
 
 // ============================================================================

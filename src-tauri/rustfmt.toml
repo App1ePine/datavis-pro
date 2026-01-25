@@ -1,5 +1,11 @@
-indent_style = "Block"
+# Stable Rustfmt 配置
+
+# 基础格式
+edition = "2024"
+max_width = 120
+tab_spaces = 4
+newline_style = "Unix"
+
+# 导入与模块
 reorder_imports = true
-blank_lines_lower_bound = 1
-blank_lines_upper_bound = 2
-combine_control_expr = false
+reorder_modules = true

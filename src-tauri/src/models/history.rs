@@ -302,22 +302,14 @@ impl OperationType {
                 sort_column,
                 ..
             } => {
-                let base = format!(
-                    "横表转纵表 (标识列: {}, 值列: {})",
-                    id_vars.len(),
-                    value_vars.len()
-                );
+                let base = format!("横表转纵表 (标识列: {}, 值列: {})", id_vars.len(), value_vars.len());
                 if let Some(sort_col) = sort_column {
                     format!("{} [按 {} 排序]", base, sort_col)
                 } else {
                     base
                 }
             }
-            OperationType::Pivot {
-                index,
-                columns,
-                values,
-            } => {
+            OperationType::Pivot { index, columns, values } => {
                 format!(
                     "纵表转横表 (索引: {}, 列: {}, 值: {})",
                     index.join(", "),

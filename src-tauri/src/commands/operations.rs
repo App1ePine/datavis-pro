@@ -20,10 +20,7 @@ use tauri::State;
 // 辅助函数：创建历史条目
 // ============================================================================
 /// 从 DataFrame 和操作类型创建历史条目
-fn create_history_entry(
-    df: DataFrame,
-    operation: OperationType,
-) -> Result<HistoryEntry, DataAnalystError> {
+fn create_history_entry(df: DataFrame, operation: OperationType) -> Result<HistoryEntry, DataAnalystError> {
     // 生成唯一 ID
     let id = uuid::Uuid::new_v4().to_string();
 
@@ -47,11 +44,7 @@ fn create_history_entry(
 }
 
 /// 从 DataFrame 创建 DatasetInfo
-fn create_dataset_info(
-    df: &DataFrame,
-    id: &str,
-    name: &str,
-) -> Result<DatasetInfo, DataAnalystError> {
+fn create_dataset_info(df: &DataFrame, id: &str, name: &str) -> Result<DatasetInfo, DataAnalystError> {
     let rows = df.height();
 
     // 提取列信息
@@ -86,10 +79,7 @@ fn create_dataset_info(
 /// 参数：
 /// - subset: 要检查的列（None 表示检查所有列）
 #[tauri::command]
-pub async fn drop_nulls(
-    subset: Option<Vec<String>>,
-    state: State<'_, AppState>,
-) -> Result<(), String> {
+pub async fn drop_nulls(subset: Option<Vec<String>>, state: State<'_, AppState>) -> Result<(), String> {
     let (current_df, subset_clone) = {
         let store = state
             .data_store
@@ -184,10 +174,7 @@ pub async fn drop_all_nulls(state: State<'_, AppState>) -> Result<(), String> {
 /// 参数：
 /// - columns: 要保留的列名列表
 #[tauri::command]
-pub async fn select_columns(
-    columns: Vec<String>,
-    state: State<'_, AppState>,
-) -> Result<(), String> {
+pub async fn select_columns(columns: Vec<String>, state: State<'_, AppState>) -> Result<(), String> {
     let cols_clone = columns.clone();
 
     let current_df = {
@@ -265,10 +252,7 @@ pub async fn drop_columns(columns: Vec<String>, state: State<'_, AppState>) -> R
 /// 参数：
 /// - mapping: 旧列名 -> 新列名的映射
 #[tauri::command]
-pub async fn rename_columns(
-    mapping: HashMap<String, String>,
-    state: State<'_, AppState>,
-) -> Result<(), String> {
+pub async fn rename_columns(mapping: HashMap<String, String>, state: State<'_, AppState>) -> Result<(), String> {
     let mapping_clone = mapping.clone();
 
     let current_df = {
@@ -314,10 +298,7 @@ pub async fn rename_columns(
 /// - mapping: 列名 -> 目标类型的映射
 ///   支持所有 Polars 基础类型
 #[tauri::command]
-pub async fn cast_types(
-    mapping: HashMap<String, String>,
-    state: State<'_, AppState>,
-) -> Result<(), String> {
+pub async fn cast_types(mapping: HashMap<String, String>, state: State<'_, AppState>) -> Result<(), String> {
     let mapping_clone = mapping.clone();
 
     let current_df = {
@@ -411,9 +392,7 @@ pub async fn filter_data(expression: String, state: State<'_, AppState>) -> Resu
             .execute(&sql_query)
             .map_err(|e| format!("SQL 查询执行失败: {}", e))?;
 
-        result_lf
-            .collect()
-            .map_err(|e| format!("收集查询结果失败: {}", e))
+        result_lf.collect().map_err(|e| format!("收集查询结果失败: {}", e))
     })
     .await
     .map_err(|e| e.to_string())??;
@@ -439,10 +418,7 @@ pub async fn filter_data(expression: String, state: State<'_, AppState>) -> Resu
 /// 参数：
 /// - strategy: 填充策略（JSON 格式）
 #[tauri::command]
-pub async fn fill_null(
-    strategy: serde_json::Value,
-    state: State<'_, AppState>,
-) -> Result<(), String> {
+pub async fn fill_null(strategy: serde_json::Value, state: State<'_, AppState>) -> Result<(), String> {
     // 预处理参数
     let strategy_type = strategy
         .get("strategy")
@@ -450,14 +426,11 @@ pub async fn fill_null(
         .map(|s| s.to_string())
         .ok_or("缺少 strategy 字段")?;
 
-    let columns = strategy
-        .get("columns")
-        .and_then(|v| v.as_array())
-        .map(|arr| {
-            arr.iter()
-                .filter_map(|v| v.as_str().map(String::from))
-                .collect::<Vec<String>>()
-        });
+    let columns = strategy.get("columns").and_then(|v| v.as_array()).map(|arr| {
+        arr.iter()
+            .filter_map(|v| v.as_str().map(String::from))
+            .collect::<Vec<String>>()
+    });
 
     let strat_val_opt = strategy
         .get("value")
@@ -478,21 +451,15 @@ pub async fn fill_null(
 
     let result_df = tauri::async_runtime::spawn_blocking(move || {
         let filled_df = match strategy_type_clone.as_str() {
-            "forward" => current_df
-                .fill_null(FillNullStrategy::Forward(None))
-                .unwrap(),
-            "backward" => current_df
-                .fill_null(FillNullStrategy::Backward(None))
-                .unwrap(),
+            "forward" => current_df.fill_null(FillNullStrategy::Forward(None)).unwrap(),
+            "backward" => current_df.fill_null(FillNullStrategy::Backward(None)).unwrap(),
             "min" => current_df.fill_null(FillNullStrategy::Min).unwrap(),
             "max" => current_df.fill_null(FillNullStrategy::Max).unwrap(),
             "mean" => current_df.fill_null(FillNullStrategy::Mean).unwrap(),
             "zero" => current_df.fill_null(FillNullStrategy::Zero).unwrap(),
             "one" => current_df.fill_null(FillNullStrategy::One).unwrap(),
             // 对于 constant，这里简化处理，实际应解析 value
-            "constant" => current_df
-                .fill_null(FillNullStrategy::Forward(None))
-                .unwrap(),
+            "constant" => current_df.fill_null(FillNullStrategy::Forward(None)).unwrap(),
             _ => return Err(format!("不支持的填充策略: {}", strategy_type_clone)),
         };
 
@@ -532,9 +499,7 @@ pub async fn fill_null(
         "mean" => FillStrategy::Mean,
         "zero" => FillStrategy::Zero,
         "one" => FillStrategy::One,
-        "constant" => FillStrategy::Constant {
-            value: strat_val_opt,
-        },
+        "constant" => FillStrategy::Constant { value: strat_val_opt },
         _ => FillStrategy::Forward,
     };
 
@@ -758,11 +723,7 @@ pub async fn rolling_average(
 
         current_df
             .lazy()
-            .with_column(
-                col(&column_clone)
-                    .rolling_mean(options)
-                    .alias(&new_col_name),
-            )
+            .with_column(col(&column_clone).rolling_mean(options).alias(&new_col_name))
             .collect()
             .map_err(|e| format!("计算移动平均失败: {}", e))
     })
@@ -826,11 +787,7 @@ pub async fn rolling_median(
 
         current_df
             .lazy()
-            .with_column(
-                col(&column_clone)
-                    .rolling_median(options)
-                    .alias(&new_col_name),
-            )
+            .with_column(col(&column_clone).rolling_median(options).alias(&new_col_name))
             .collect()
             .map_err(|e| format!("计算移动中位数失败: {}", e))
     })
@@ -1133,10 +1090,7 @@ pub async fn rolling_quantile(
     };
 
     let result_df = tauri::async_runtime::spawn_blocking(move || {
-        let new_col_name = format!(
-            "{}_rolling_quantile_{}_{}",
-            column_clone, window_size, quantile
-        );
+        let new_col_name = format!("{}_rolling_quantile_{}_{}", column_clone, window_size, quantile);
 
         let options = RollingOptionsFixedWindow {
             window_size,

@@ -4,10 +4,10 @@
 // 这个文件实现了基于操作历史的数据存储管理
 // 使用历史栈来存储每次操作后的完整状态，支持 undo/redo 功能
 
-use std::sync::{Arc, Mutex};
-use polars::prelude::*;
-use crate::models::{DatasetInfo, HistoryEntry, HistoryEntryInfo};
 use crate::error::DataAnalystError;
+use crate::models::{DatasetInfo, HistoryEntry, HistoryEntryInfo};
+use polars::prelude::*;
+use std::sync::{Arc, Mutex};
 
 // ============================================================================
 // 数据存储结构体
@@ -137,8 +137,7 @@ impl DataStore {
     /// - Some(&HistoryEntry): 当前历史条目
     /// - None: 没有数据
     pub fn get_current_entry(&self) -> Option<&HistoryEntry> {
-        self.current_index
-            .and_then(|index| self.history.get(index))
+        self.current_index.and_then(|index| self.history.get(index))
     }
 
     /// 撤销操作（Undo）
@@ -209,9 +208,7 @@ impl DataStore {
             .history
             .iter()
             .position(|entry| entry.id == entry_id)
-            .ok_or_else(|| {
-                DataAnalystError::InvalidOperation(format!("找不到历史节点: {}", entry_id))
-            })?;
+            .ok_or_else(|| DataAnalystError::InvalidOperation(format!("找不到历史节点: {}", entry_id)))?;
 
         // 更新 current_index
         self.current_index = Some(index);

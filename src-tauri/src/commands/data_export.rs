@@ -22,21 +22,17 @@ use polars::prelude::*;
 /// 返回：
 /// - Result<String, String>: 成功返回文件路径，失败返回错误
 #[tauri::command]
-pub async fn export_csv(
-    output_path: String,
-    state: tauri::State<'_, AppState>,
-) -> Result<String, String> {
+pub async fn export_csv(output_path: String, state: tauri::State<'_, AppState>) -> Result<String, String> {
     // 获取当前 DataFrame
-    let store = state.data_store.lock()
+    let store = state
+        .data_store
+        .lock()
         .map_err(|e| format!("Failed to lock data store: {}", e))?;
 
-    let df = store
-        .get_current()
-        .ok_or("没有数据")?;
+    let df = store.get_current().ok_or("没有数据")?;
 
     // 创建输出文件
-    let mut file = std::fs::File::create(&output_path)
-        .map_err(|e| format!("Failed to create file: {}", e))?;
+    let mut file = std::fs::File::create(&output_path).map_err(|e| format!("Failed to create file: {}", e))?;
 
     // 写入 CSV 数据
     CsvWriter::new(&mut file)
@@ -60,21 +56,17 @@ pub async fn export_csv(
 /// 返回：
 /// - Result<String, String>: 成功返回文件路径，失败返回错误
 #[tauri::command]
-pub async fn export_parquet(
-    output_path: String,
-    state: tauri::State<'_, AppState>,
-) -> Result<String, String> {
+pub async fn export_parquet(output_path: String, state: tauri::State<'_, AppState>) -> Result<String, String> {
     // 获取当前 DataFrame
-    let store = state.data_store.lock()
+    let store = state
+        .data_store
+        .lock()
         .map_err(|e| format!("Failed to lock data store: {}", e))?;
 
-    let df = store
-        .get_current()
-        .ok_or("没有数据")?;
+    let df = store.get_current().ok_or("没有数据")?;
 
     // 创建输出文件
-    let mut file = std::fs::File::create(&output_path)
-        .map_err(|e| format!("Failed to create file: {}", e))?;
+    let mut file = std::fs::File::create(&output_path).map_err(|e| format!("Failed to create file: {}", e))?;
 
     // 写入 Parquet 数据
     ParquetWriter::new(&mut file)
@@ -91,10 +83,10 @@ pub async fn export_parquet(
 ///
 /// 这会清空内存中的所有数据和操作历史
 #[tauri::command]
-pub async fn clear_data(
-    state: tauri::State<'_, AppState>,
-) -> Result<(), String> {
-    let mut store = state.data_store.lock()
+pub async fn clear_data(state: tauri::State<'_, AppState>) -> Result<(), String> {
+    let mut store = state
+        .data_store
+        .lock()
         .map_err(|e| format!("Failed to lock data store: {}", e))?;
 
     store.clear();

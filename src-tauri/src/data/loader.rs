@@ -13,7 +13,7 @@
 use crate::error::{DataAnalystError, Result};
 // 自定义错误类型
 use crate::models::{ColumnInfo, DatasetInfo};
-use calamine::{open_workbook, DataType, Reader, Xlsx};
+use calamine::{DataType, Reader, Xlsx, open_workbook};
 // Calamine: Excel 解析库
 use chrono::{DateTime, Utc};
 // Chrono: 时间处理库
@@ -62,7 +62,7 @@ pub fn load_csv(file_path: &str) -> Result<DataFrame> {
         // with_parse_options: 设置分隔符和日期解析
         .with_parse_options(
             CsvParseOptions::default()
-                .with_separator(separator)  // 使用检测到的分隔符
+                .with_separator(separator) // 使用检测到的分隔符
                 .with_try_parse_dates(true), // 尝试解析日期时间
         )
         // try_into_reader_with_file_path: 创建 CSV 读取器
@@ -101,11 +101,7 @@ fn detect_csv_separator(file_path: &str) -> Result<u8> {
     let reader = BufReader::new(file);
 
     // 读取前 10 行作为样本
-    let sample_lines: Vec<String> = reader
-        .lines()
-        .take(10)
-        .filter_map(|line| line.ok())
-        .collect();
+    let sample_lines: Vec<String> = reader.lines().take(10).filter_map(|line| line.ok()).collect();
 
     // 如果文件为空或只有一行，默认使用逗号
     if sample_lines.len() < 2 {
@@ -113,12 +109,7 @@ fn detect_csv_separator(file_path: &str) -> Result<u8> {
     }
 
     // 候选分隔符：逗号、制表符、分号、竖线
-    let candidates = vec![
-        (b',', "逗号"),
-        (b'\t', "制表符"),
-        (b';', "分号"),
-        (b'|', "竖线"),
-    ];
+    let candidates = vec![(b',', "逗号"), (b'\t', "制表符"), (b';', "分号"), (b'|', "竖线")];
 
     let mut best_separator = b',';
     let mut best_score = f64::MAX;
@@ -251,9 +242,7 @@ pub fn load_excel(file_path: &str, sheet_name: Option<String>) -> Result<DataFra
 fn excel_range_to_dataframe(range: calamine::Range<calamine::Data>) -> Result<DataFrame> {
     // 检查 Range 是否为空
     if range.is_empty() {
-        return Err(DataAnalystError::InvalidDataFormat(
-            "Empty Excel sheet".to_string(),
-        ));
+        return Err(DataAnalystError::InvalidDataFormat("Empty Excel sheet".to_string()));
     }
 
     // get_size: 获取数据范围的大小
@@ -262,9 +251,7 @@ fn excel_range_to_dataframe(range: calamine::Range<calamine::Data>) -> Result<Da
 
     // 再次检查是否有数据
     if height == 0 || width == 0 {
-        return Err(DataAnalystError::InvalidDataFormat(
-            "Empty Excel sheet".to_string(),
-        ));
+        return Err(DataAnalystError::InvalidDataFormat("Empty Excel sheet".to_string()));
     }
 
     // ------------------------------------------------------------------------
@@ -300,14 +287,14 @@ fn excel_range_to_dataframe(range: calamine::Range<calamine::Data>) -> Result<Da
             // 将单元格值转换为字符串
             let value = cell_value.map(|v| match v {
                 // 根据不同的数据类型进行转换
-                calamine::Data::Int(i) => i.to_string(), // 整数
-                calamine::Data::Float(f) => f.to_string(), // 浮点数
-                calamine::Data::String(s) => s.clone(),  // 字符串
-                calamine::Data::Bool(b) => b.to_string(), // 布尔值
-                calamine::Data::DateTime(dt) => dt.to_string(), // 日期时间
+                calamine::Data::Int(i) => i.to_string(),               // 整数
+                calamine::Data::Float(f) => f.to_string(),             // 浮点数
+                calamine::Data::String(s) => s.clone(),                // 字符串
+                calamine::Data::Bool(b) => b.to_string(),              // 布尔值
+                calamine::Data::DateTime(dt) => dt.to_string(),        // 日期时间
                 calamine::Data::Error(e) => format!("Error: {:?}", e), // 错误
-                calamine::Data::Empty => String::new(),  // 空单元格
-                _ => String::new(),                      // 其他类型
+                calamine::Data::Empty => String::new(),                // 空单元格
+                _ => String::new(),                                    // 其他类型
             });
 
             // 添加到值数组
@@ -578,12 +565,7 @@ fn series_value_to_json(series: &Series, idx: usize) -> serde_json::Value {
         // 日期和时间类型 → JSON string (格式化为 yyyy-MM-dd HH:mm:ss)
         AnyValue::Date(d) => {
             // Date 类型：转换为 yyyy-MM-dd 格式
-            serde_json::Value::String(format!(
-                "{:04}-{:02}-{:02}",
-                d / 10000,
-                (d % 10000) / 100,
-                d % 100
-            ))
+            serde_json::Value::String(format!("{:04}-{:02}-{:02}", d / 10000, (d % 10000) / 100, d % 100))
         }
         AnyValue::Datetime(dt, time_unit, _) => {
             // Datetime 类型：转换为 yyyy-MM-dd HH:mm:ss 格式

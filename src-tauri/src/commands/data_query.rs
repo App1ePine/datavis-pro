@@ -4,11 +4,11 @@
 // 这个文件定义了数据查询相关的 Tauri 命令
 // 新架构：只有一个当前数据集，不再有多数据集列表
 
+use crate::data::dataframe_to_json_rows;
+use crate::models::{ColumnStats, DatasetData, DatasetInfo};
 // ============================================================================
 // 导入依赖
 // ============================================================================
-use crate::data::dataframe_to_json_rows;
-use crate::models::{ColumnStats, DatasetData, DatasetInfo};
 use crate::AppState;
 use polars::prelude::*;
 
@@ -27,9 +27,7 @@ use polars::prelude::*;
 ///   - Some(info): 有数据时返回元信息
 ///   - None: 没有数据
 #[tauri::command]
-pub async fn get_current_info(
-    state: tauri::State<'_, AppState>,
-) -> Result<Option<DatasetInfo>, String> {
+pub async fn get_current_info(state: tauri::State<'_, AppState>) -> Result<Option<DatasetInfo>, String> {
     let store = state
         .data_store
         .lock()
@@ -66,9 +64,7 @@ pub async fn get_current_data(
         .map_err(|e| format!("Failed to lock data store: {}", e))?;
 
     // 获取当前 DataFrame
-    let df = store
-        .get_current()
-        .ok_or("没有数据")?;
+    let df = store.get_current().ok_or("没有数据")?;
 
     // 获取总行数
     let total_rows = df.height();
@@ -81,11 +77,7 @@ pub async fn get_current_data(
     let sliced_df = df.slice(start as i64, end - start);
 
     // 提取列名
-    let columns: Vec<String> = sliced_df
-        .get_column_names()
-        .iter()
-        .map(|s| s.to_string())
-        .collect();
+    let columns: Vec<String> = sliced_df.get_column_names().iter().map(|s| s.to_string()).collect();
 
     // 转换为 JSON 行
     let rows = dataframe_to_json_rows(&sliced_df);
@@ -109,18 +101,13 @@ pub async fn get_current_data(
 /// 返回：
 /// - Result<ColumnStats, String>: 列统计信息
 #[tauri::command]
-pub async fn get_column_stats(
-    column_name: String,
-    state: tauri::State<'_, AppState>,
-) -> Result<ColumnStats, String> {
+pub async fn get_column_stats(column_name: String, state: tauri::State<'_, AppState>) -> Result<ColumnStats, String> {
     let store = state
         .data_store
         .lock()
         .map_err(|e| format!("Failed to lock data store: {}", e))?;
 
-    let df = store
-        .get_current()
-        .ok_or("没有数据")?;
+    let df = store.get_current().ok_or("没有数据")?;
 
     let series = df
         .column(&column_name)
@@ -129,32 +116,26 @@ pub async fn get_column_stats(
     // 基础统计
     let total_count = series.len();
     let null_count = series.null_count();
-    let unique_count = series.n_unique()
-        .map_err(|e| format!("计算唯一值数量失败: {}", e))?;
+    let unique_count = series.n_unique().map_err(|e| format!("计算唯一值数量失败: {}", e))?;
 
     // 数值统计
     let (max, min, mean, std, q25, q50, q75) = if series.dtype().is_numeric() {
         // 转换为 Float64 进行统计
         match series.cast(&DataType::Float64) {
-            Ok(float_series) => {
-                match float_series.f64() {
-                    Ok(ca) => {
-                        let max_val = ca.max();
-                        let min_val = ca.min();
-                        let mean_val = ca.mean();
-                        let std_val = ca.std(1);
-                        let q25_val = ca.quantile(0.25, QuantileMethod::default())
-                            .ok().flatten();
-                        let q50_val = ca.quantile(0.50, QuantileMethod::default())
-                            .ok().flatten();
-                        let q75_val = ca.quantile(0.75, QuantileMethod::default())
-                            .ok().flatten();
-                        (max_val, min_val, mean_val, std_val, q25_val, q50_val, q75_val)
-                    }
-                    Err(_) => (None, None, None, None, None, None, None)
+            Ok(float_series) => match float_series.f64() {
+                Ok(ca) => {
+                    let max_val = ca.max();
+                    let min_val = ca.min();
+                    let mean_val = ca.mean();
+                    let std_val = ca.std(1);
+                    let q25_val = ca.quantile(0.25, QuantileMethod::default()).ok().flatten();
+                    let q50_val = ca.quantile(0.50, QuantileMethod::default()).ok().flatten();
+                    let q75_val = ca.quantile(0.75, QuantileMethod::default()).ok().flatten();
+                    (max_val, min_val, mean_val, std_val, q25_val, q50_val, q75_val)
                 }
-            }
-            Err(_) => (None, None, None, None, None, None, None)
+                Err(_) => (None, None, None, None, None, None, None),
+            },
+            Err(_) => (None, None, None, None, None, None, None),
         }
     } else {
         (None, None, None, None, None, None, None)
@@ -168,7 +149,7 @@ pub async fn get_column_stats(
                 let false_cnt = true_cnt.map(|t| total_count - null_count - t);
                 (true_cnt, false_cnt)
             }
-            Err(_) => (None, None)
+            Err(_) => (None, None),
         }
     } else {
         (None, None)
@@ -195,7 +176,7 @@ pub async fn get_column_stats(
 
                 let range_days = match (min_val, max_val) {
                     (Some(min), Some(max)) => Some((max - min) as f64),
-                    _ => None
+                    _ => None,
                 };
 
                 (min_str, max_str, range_days)
@@ -231,7 +212,7 @@ pub async fn get_column_stats(
                         let diff_micros = max - min;
                         Some(diff_micros as f64 / 86_400_000_000.0)
                     }
-                    _ => None
+                    _ => None,
                 };
 
                 (min_str, max_str, range_days)
@@ -239,7 +220,7 @@ pub async fn get_column_stats(
                 (None, None, None)
             }
         }
-        _ => (None, None, None)
+        _ => (None, None, None),
     };
 
     Ok(ColumnStats {

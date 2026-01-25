@@ -4,13 +4,17 @@
 // 这个文件定义了文件导入相关的 Tauri 命令
 // 前端可以调用这些命令来导入 CSV 和 Excel 文件
 
+// 应用状态
+use crate::data::{create_dataset_info, load_csv, load_excel, load_parquet};
+// 数据加载函数
+use crate::models::{DatasetInfo, HistoryEntry, OperationType};
 // ============================================================================
 // 导入依赖
 // ============================================================================
-use crate::data::{create_dataset_info, load_csv, load_excel, load_parquet};  // 数据加载函数
-use crate::models::{DatasetInfo, HistoryEntry, OperationType};  // 数据集元信息类型
-use crate::AppState;              // 应用状态
-use uuid::Uuid;                   // UUID 生成器
+use crate::AppState;
+// 数据集元信息类型
+use uuid::Uuid;
+// UUID 生成器
 
 // ============================================================================
 // CSV 文件导入命令
@@ -43,11 +47,12 @@ use uuid::Uuid;                   // UUID 生成器
 /// });
 /// console.log(`导入成功，数据集 ID: ${info.id}`);
 /// ```
-#[tauri::command]  // 这个宏将函数注册为 Tauri 命令
+#[tauri::command] // 这个宏将函数注册为 Tauri 命令
 pub async fn import_csv(
-    file_path: String,                    // 文件路径（前端传入）
-    state: tauri::State<'_, AppState>,    // 应用状态（自动注入）
-) -> Result<DatasetInfo, String> {        // 返回类型
+    file_path: String,                 // 文件路径（前端传入）
+    state: tauri::State<'_, AppState>, // 应用状态（自动注入）
+) -> Result<DatasetInfo, String> {
+    // 返回类型
     // ------------------------------------------------------------------------
     // 步骤 1: 读取 CSV 文件
     // ------------------------------------------------------------------------
@@ -55,8 +60,7 @@ pub async fn import_csv(
     // map_err: 将错误转换为字符串（Tauri 要求错误类型是 String）
     // format!: 格式化错误消息
     // ?: 如果失败，立即返回错误
-    let df = load_csv(&file_path)
-        .map_err(|e| format!("Failed to load CSV: {}", e))?;
+    let df = load_csv(&file_path).map_err(|e| format!("Failed to load CSV: {}", e))?;
 
     // ------------------------------------------------------------------------
     // 步骤 2: 生成唯一 ID 和时间戳
@@ -92,7 +96,9 @@ pub async fn import_csv(
     // ------------------------------------------------------------------------
     // 步骤 6: 清空历史并添加新条目
     // ------------------------------------------------------------------------
-    let mut store = state.data_store.lock()
+    let mut store = state
+        .data_store
+        .lock()
         .map_err(|e| format!("Failed to lock data store: {}", e))?;
 
     // 清空旧历史（导入新文件时重置）
@@ -147,17 +153,16 @@ pub async fn import_csv(
 /// ```
 #[tauri::command]
 pub async fn import_excel(
-    file_path: String,                    // 文件路径
-    sheet_name: Option<String>,           // 可选的工作表名称
-    state: tauri::State<'_, AppState>,    // 应用状态
+    file_path: String,                 // 文件路径
+    sheet_name: Option<String>,        // 可选的工作表名称
+    state: tauri::State<'_, AppState>, // 应用状态
 ) -> Result<DatasetInfo, String> {
     // ------------------------------------------------------------------------
     // 步骤 1: 读取 Excel 文件
     // ------------------------------------------------------------------------
     // load_excel: 使用 Calamine 读取 Excel 文件
     // sheet_name: 传递工作表名称（可能是 None）
-    let df = load_excel(&file_path, sheet_name)
-        .map_err(|e| format!("Failed to load Excel: {}", e))?;
+    let df = load_excel(&file_path, sheet_name).map_err(|e| format!("Failed to load Excel: {}", e))?;
 
     // ------------------------------------------------------------------------
     // 步骤 2-7: 与 CSV 导入相同
@@ -180,7 +185,9 @@ pub async fn import_excel(
         description,
     };
 
-    let mut store = state.data_store.lock()
+    let mut store = state
+        .data_store
+        .lock()
         .map_err(|e| format!("Failed to lock data store: {}", e))?;
     store.clear();
     store.push_operation(entry);
@@ -214,13 +221,9 @@ pub async fn import_excel(
 /// });
 /// ```
 #[tauri::command]
-pub async fn import_parquet(
-    file_path: String,
-    state: tauri::State<'_, AppState>,
-) -> Result<DatasetInfo, String> {
+pub async fn import_parquet(file_path: String, state: tauri::State<'_, AppState>) -> Result<DatasetInfo, String> {
     // 读取 Parquet 文件
-    let df = load_parquet(&file_path)
-        .map_err(|e| format!("Failed to load Parquet: {}", e))?;
+    let df = load_parquet(&file_path).map_err(|e| format!("Failed to load Parquet: {}", e))?;
 
     // 生成 UUID 和时间戳
     let id = Uuid::new_v4().to_string();
@@ -245,7 +248,9 @@ pub async fn import_parquet(
     };
 
     // 清空历史并添加新条目
-    let mut store = state.data_store.lock()
+    let mut store = state
+        .data_store
+        .lock()
         .map_err(|e| format!("Failed to lock data store: {}", e))?;
     store.clear();
     store.push_operation(entry);
