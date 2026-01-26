@@ -61,7 +61,7 @@
               <el-button size="small" class="operation-btn" @click="showRollingDialog" :disabled="!hasData">
                 📊 滑动窗口
               </el-button>
-              <el-button size="small" class="operation-btn" @click="handlePlaceholder('排序')" :disabled="!hasData">
+              <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showSortDialog">
                 📶 排序
               </el-button>
             </div>
@@ -70,14 +70,20 @@
           <!-- 可视化 -->
           <el-collapse-item title="可视化" name="3">
             <div class="operation-list">
-              <el-button size="small" class="operation-btn" @click="handlePlaceholder('趋势图')" :disabled="!hasData">
-                📈 趋势图
+              <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showLineChartDialog">
+                📈 折线图
               </el-button>
-              <el-button size="small" class="operation-btn" @click="handlePlaceholder('直方图')" :disabled="!hasData">
-                📊 直方图
+              <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showBarChartDialog">
+                📊 柱状图
               </el-button>
-              <el-button size="small" class="operation-btn" @click="handlePlaceholder('散点图')" :disabled="!hasData">
+              <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showScatterChartDialog">
                 🔵 散点图
+              </el-button>
+              <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showPieChartDialog">
+                🥧 饼图
+              </el-button>
+              <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showHistogramChartDialog">
+                📊 直方图
               </el-button>
             </div>
           </el-collapse-item>
@@ -105,11 +111,20 @@
 
     <FillNullDialog v-model:visible="fillNullVisible" :columns="currentColumns" @confirm="handleFillNullConfirm" />
 
+    <SortDialog v-model:visible="sortVisible" :columns="currentColumns" @confirm="handleSortConfirm" />
+
     <PivotDialog v-model:visible="pivotVisible" />
 
     <UnpivotDialog v-model:visible="unpivotVisible" />
 
     <RollingDialog v-model:visible="rollingVisible" />
+
+    <!-- 图表对话框 -->
+    <LineChartDialog v-model="lineChartVisible" />
+    <BarChartDialog v-model="barChartVisible" />
+    <ScatterChartDialog v-model="scatterChartVisible" />
+    <PieChartDialog v-model="pieChartVisible" />
+    <HistogramChartDialog v-model="histogramChartVisible" />
   </div>
 </template>
 
@@ -118,6 +133,11 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import { computed, ref } from 'vue';
 import { useDataStore } from '@/stores/dataStore';
 import type { FillStrategy } from '@/types/history';
+import BarChartDialog from './chart/BarChartDialog.vue';
+import HistogramChartDialog from './chart/HistogramChartDialog.vue';
+import LineChartDialog from './chart/LineChartDialog.vue';
+import PieChartDialog from './chart/PieChartDialog.vue';
+import ScatterChartDialog from './chart/ScatterChartDialog.vue';
 import CastTypesDialog from './dialogs/CastTypesDialog.vue';
 import ColumnSelectionDialog from './dialogs/ColumnSelectionDialog.vue';
 import FillNullDialog from './dialogs/FillNullDialog.vue';
@@ -125,6 +145,7 @@ import FilterDialog from './dialogs/FilterDialog.vue';
 import PivotDialog from './dialogs/PivotDialog.vue';
 import RenameColumnsDialog from './dialogs/RenameColumnsDialog.vue';
 import RollingDialog from './dialogs/RollingDialog.vue';
+import SortDialog from './dialogs/SortDialog.vue';
 import UnpivotDialog from './dialogs/UnpivotDialog.vue';
 
 const dataStore = useDataStore();
@@ -145,9 +166,15 @@ const renameColumnsVisible = ref(false);
 const castTypesVisible = ref(false);
 const filterVisible = ref(false);
 const fillNullVisible = ref(false);
+const sortVisible = ref(false);
 const pivotVisible = ref(false);
 const unpivotVisible = ref(false);
 const rollingVisible = ref(false);
+const lineChartVisible = ref(false);
+const barChartVisible = ref(false);
+const scatterChartVisible = ref(false);
+const pieChartVisible = ref(false);
+const histogramChartVisible = ref(false);
 
 // Undo/Redo 操作
 async function handleUndo() {
@@ -235,6 +262,10 @@ function showFillNullDialog() {
   fillNullVisible.value = true;
 }
 
+function showSortDialog() {
+  sortVisible.value = true;
+}
+
 function showRenameColumnsDialog() {
   renameColumnsVisible.value = true;
 }
@@ -253,6 +284,26 @@ function showUnpivotDialog() {
 
 function showRollingDialog() {
   rollingVisible.value = true;
+}
+
+function showLineChartDialog() {
+  lineChartVisible.value = true;
+}
+
+function showBarChartDialog() {
+  barChartVisible.value = true;
+}
+
+function showScatterChartDialog() {
+  scatterChartVisible.value = true;
+}
+
+function showPieChartDialog() {
+  pieChartVisible.value = true;
+}
+
+function showHistogramChartDialog() {
+  histogramChartVisible.value = true;
 }
 
 // 对话框确认处理
@@ -314,9 +365,14 @@ async function handleFillNullConfirm(strategy: FillStrategy) {
   }
 }
 
-// 占位符函数（未实现的功能）
-function handlePlaceholder(feature: string) {
-  ElMessage.info(`${feature}功能开发中...`);
+async function handleSortConfirm(payload: { column: string; descending: boolean; nullsLast: boolean }) {
+  try {
+    await dataStore.sortData(payload.column, payload.descending, payload.nullsLast);
+    ElMessage.success('排序完成');
+  } catch (e) {
+    console.error('排序失败:', e);
+    ElMessage.error(`排序失败: ${e}`);
+  }
 }
 </script>
 

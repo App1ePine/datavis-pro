@@ -42,6 +42,10 @@ pub mod history;
 ///       rename_columns, cast_types, fill_null, rolling_average, rolling_median
 pub mod operations;
 
+/// 图表数据生成命令模块
+/// 包含：generate_chart_data
+pub mod chart;
+
 // ============================================================================
 // 重新导出（Re-exports）
 // ============================================================================
@@ -71,8 +75,11 @@ pub use history::{
 pub use operations::{
     cast_types, drop_all_nulls, drop_columns, drop_nulls, fill_null, filter_data, pivot_data, rename_columns,
     rolling_average, rolling_max, rolling_median, rolling_min, rolling_quantile, rolling_std, rolling_sum, rolling_var,
-    select_columns, unpivot_data,
+    select_columns, sort_data, unpivot_data,
 };
+
+/// 这些命令用于图表数据生成
+pub use chart::generate_chart_data;
 
 // ============================================================================
 // 使用示例

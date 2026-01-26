@@ -79,3 +79,52 @@ export interface ColumnStats {
   /** False 数量（仅布尔类型） */
   false_count: number | null;
 }
+
+/**
+ * 图表类型
+ */
+export type ChartType = 'line' | 'bar' | 'scatter' | 'pie' | 'histogram';
+
+/**
+ * 折线图样式
+ */
+export type LineChartStyle = 'line' | 'area' | 'stack_area';
+
+/**
+ * 图表配置
+ */
+export interface ChartConfig {
+  /** 图表类型 */
+  chart_type: ChartType;
+  /** X 轴列名（折线图、柱状图、散点图使用） */
+  x_column?: string;
+  /** Y 轴列名列表（折线图、柱状图、散点图使用，支持多系列） */
+  y_columns?: string[];
+  /** 分类列名（饼图使用） */
+  category_column?: string;
+  /** 值列名（饼图使用） */
+  value_column?: string;
+  /** 图表标题（可选） */
+  title?: string;
+
+  /** 折线图样式（折线/面积/面积堆积） */
+  line_style?: LineChartStyle;
+  /** 双 Y 轴右侧列（折线图使用） */
+  y_axis_right_columns?: string[];
+  /** 直方图列名（直方图使用） */
+  histogram_column?: string;
+  /** 直方图分箱数量（直方图使用） */
+  histogram_bins?: number;
+}
+
+/**
+ * 图表数据（ECharts dataset 格式）
+ */
+export interface ChartData {
+  /** 图表类型 */
+  chart_type: ChartType;
+  /** ECharts dataset 格式的数据（二维数组，第一行是列名） */
+  dataset: Array<Array<string | number | boolean | null>>;
+  /** 数据行数（不包括表头） */
+  data_count: number;
+}

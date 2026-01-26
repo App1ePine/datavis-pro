@@ -75,15 +75,14 @@ const columnDefs = computed(() => {
       minWidth,
       // 自动格式化数值列，保留4位小数
       valueFormatter: (params: ValueFormatterParams) => {
-        if (typeof params.value === 'number') {
-          // 如果是整数，不显示小数点
-          if (Number.isInteger(params.value)) {
-            return params.value;
-          }
-          // 如果是浮点数，保留4位小数
-          return params.value.toFixed(4);
+        const v = params.value;
+        if (typeof v !== 'number' || !Number.isFinite(v)) {
+          return v;
         }
-        return params.value;
+        return new Intl.NumberFormat('zh-CN', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 4,
+        }).format(v);
       },
     };
   });

@@ -99,6 +99,18 @@ pub enum OperationType {
     ///   目标类型: "Int64", "Float64", "String", "Boolean", "Date"
     CastTypes { mapping: HashMap<String, String> },
 
+    /// 排序
+    ///
+    /// 参数：
+    /// - column: 排序列
+    /// - descending: 是否降序
+    /// - nulls_last: 空值是否置后
+    Sort {
+        column: String,
+        descending: bool,
+        nulls_last: bool,
+    },
+
     /// 筛选过滤
     ///
     /// 参数：
@@ -336,6 +348,15 @@ impl OperationType {
             }
             OperationType::CastTypes { mapping } => {
                 format!("转换列类型 ({} 列)", mapping.len())
+            }
+            OperationType::Sort {
+                column,
+                descending,
+                nulls_last,
+            } => {
+                let order = if *descending { "降序" } else { "升序" };
+                let nulls = if *nulls_last { "空值置后" } else { "空值置前" };
+                format!("排序 ({}，{}，{})", column, order, nulls)
             }
             OperationType::Filter { .. } => "筛选过滤".to_string(),
             OperationType::FillNull { strategy } => {

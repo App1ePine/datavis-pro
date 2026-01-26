@@ -22,11 +22,14 @@
 /// 这些结构体都实现了 Serialize 和 Deserialize trait，可以与 JSON 互相转换
 pub mod dataset;
 
+/// 图表相关的数据模型
+/// 定义了 ChartType、ChartConfig、ChartData 等结构体
+pub mod chart;
+
 /// 操作历史相关的数据模型
 /// 定义了 OperationType、HistoryEntry、HistoryEntryInfo 等结构体
 /// 用于实现 undo/redo 功能和操作历史管理
 pub mod history;
-
 // ============================================================================
 // 重新导出核心数据结构
 // ============================================================================

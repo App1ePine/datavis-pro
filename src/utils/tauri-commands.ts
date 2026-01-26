@@ -1,5 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
-import type { ColumnStats, DatasetData, DatasetInfo } from '@/types/dataset';
+import type { ChartConfig, ChartData, ColumnStats, DatasetData, DatasetInfo } from '@/types/dataset';
 import type { FillStrategy, HistoryEntryInfo } from '@/types/history';
 
 /**
@@ -164,6 +164,13 @@ export async function renameColumns(mapping: Record<string, string>): Promise<Da
  */
 export async function castTypes(mapping: Record<string, string>): Promise<DatasetInfo> {
   return await invoke<DatasetInfo>('cast_types', { mapping });
+}
+
+/**
+ * 排序
+ */
+export async function sortData(column: string, descending = false, nullsLast = false): Promise<DatasetInfo> {
+  return await invoke<DatasetInfo>('sort_data', { column, descending, nullsLast });
 }
 
 /**
@@ -386,4 +393,15 @@ export async function rollingQuantile(
     center,
     min_periods: minPeriods,
   });
+}
+
+// ==================== 图表数据生成命令 ====================
+
+/**
+ * 生成图表数据（ECharts dataset 格式）
+ * @param config 图表配置
+ * @returns 图表数据（包含 dataset 二维数组）
+ */
+export async function generateChartData(config: ChartConfig): Promise<ChartData> {
+  return await invoke<ChartData>('generate_chart_data', { config });
 }

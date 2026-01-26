@@ -23,6 +23,7 @@ export type OperationType =
   | { type: 'DropColumns'; params: { columns: string[] } }
   | { type: 'RenameColumns'; params: { mapping: Record<string, string> } }
   | { type: 'CastTypes'; params: { mapping: Record<string, string> } }
+  | { type: 'Sort'; params: { column: string; descending: boolean; nulls_last: boolean } }
   | { type: 'Filter'; params: { expression: string } }
   | { type: 'FillNull'; params: { strategy: FillStrategy } }
   | { type: 'RollingAverage'; params: { column: string; window_size: number } }

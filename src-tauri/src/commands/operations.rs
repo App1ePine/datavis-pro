@@ -365,7 +365,60 @@ pub async fn cast_types(mapping: HashMap<String, String>, state: State<'_, AppSt
 }
 
 // ============================================================================
-// 7. 筛选过滤（Filter）
+// 7. 排序（Sort）
+// ============================================================================
+#[tauri::command]
+pub async fn sort_data(
+    column: String,
+    descending: bool,
+    nulls_last: bool,
+    state: State<'_, AppState>,
+) -> Result<(), String> {
+    let column_clone = column.clone();
+    let current_df = {
+        let store = state
+            .data_store
+            .lock()
+            .map_err(|e| format!("Failed to lock data store: {}", e))?;
+        store.get_current().ok_or("没有数据")?.clone()
+    };
+
+    let result_df = tauri::async_runtime::spawn_blocking(move || {
+        let column_names = current_df.get_column_names();
+        if !column_names.iter().any(|name| name.as_str() == column_clone.as_str()) {
+            return Err(format!("列 '{}' 不存在", column_clone));
+        }
+
+        current_df
+            .sort(
+                [column_clone.as_str()],
+                SortMultipleOptions::new()
+                    .with_order_descending(descending)
+                    .with_nulls_last(nulls_last),
+            )
+            .map_err(|e| format!("排序失败: {}", e))
+    })
+    .await
+    .map_err(|e| e.to_string())??;
+
+    let mut store = state
+        .data_store
+        .lock()
+        .map_err(|e| format!("Failed to lock data store: {}", e))?;
+
+    let operation = OperationType::Sort {
+        column,
+        descending,
+        nulls_last,
+    };
+    let entry = create_history_entry(result_df, operation).map_err(|e| e.to_string())?;
+    store.push_operation(entry);
+
+    Ok(())
+}
+
+// ============================================================================
+// 8. 筛选过滤（Filter）
 // ============================================================================
 /// 使用 SQL WHERE 子句筛选数据
 ///

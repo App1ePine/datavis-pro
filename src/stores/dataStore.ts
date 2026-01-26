@@ -511,6 +511,26 @@ export const useDataStore = defineStore('data', () => {
     }
   }
 
+  /**
+   * 排序
+   */
+  async function sortData(column: string, descending = false, nullsLast = false) {
+    loading.value = true;
+    error.value = null;
+    try {
+      await commands.sortData(column, descending, nullsLast);
+      await loadHistory();
+      if (currentDataset.value) {
+        await loadCurrentData(0, 100);
+      }
+    } catch (e) {
+      error.value = String(e);
+      throw e;
+    } finally {
+      loading.value = false;
+    }
+  }
+
   // ==================== 返回 ====================
 
   return {
@@ -561,5 +581,6 @@ export const useDataStore = defineStore('data', () => {
     castTypes,
     filterData,
     fillNull,
+    sortData,
   };
 });

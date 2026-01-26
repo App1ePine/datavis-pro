@@ -48,6 +48,8 @@ use commands::{
     export_parquet,
     fill_null,
     filter_data,
+    // 图表数据生成
+    generate_chart_data,
     get_column_stats,
     // 数据查询（新架构）
     get_current_data,
@@ -73,6 +75,7 @@ use commands::{
     rolling_sum,
     rolling_var,
     select_columns,
+    sort_data,
     undo_operation,
     unpivot_data,
 };
@@ -162,6 +165,7 @@ pub fn run() {
             drop_columns,
             rename_columns,
             cast_types,
+            sort_data,
             filter_data,
             fill_null,
             unpivot_data,
@@ -178,6 +182,8 @@ pub fn run() {
             export_csv,
             export_parquet,
             clear_data,
+            // 图表数据生成命令
+            generate_chart_data,
         ])
         // 运行应用
         // tauri::generate_context!() 生成应用上下文（从 tauri.conf.json 读取配置）
