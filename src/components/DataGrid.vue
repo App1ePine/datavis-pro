@@ -24,9 +24,10 @@
 <script setup lang="ts">
 import type {
   CellClickedEvent,
+  ColDef,
   GridApi,
   GridReadyEvent,
-  IGetRowsParams,
+  IDatasource,
   ValueFormatterParams,
 } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry, themeQuartz } from 'ag-grid-community';
@@ -46,7 +47,7 @@ const myTheme = themeQuartz.withParams({
 
 const dataStore = useDataStore();
 
-const columnDefs = computed(() => {
+const columnDefs = computed<ColDef[]>(() => {
   if (!dataStore.currentData || !dataStore.currentDataset) return [];
 
   // 创建列类型映射表
@@ -55,7 +56,7 @@ const columnDefs = computed(() => {
     columnTypeMap.set(col.name, col.dtype);
   });
 
-  return dataStore.currentData.columns.map((col) => {
+  return dataStore.currentData.columns.map((col): ColDef => {
     const dtype = columnTypeMap.get(col) || '';
 
     // 根据数据类型设置列宽度
@@ -88,7 +89,7 @@ const columnDefs = computed(() => {
   });
 });
 
-const defaultColDef = {
+const defaultColDef: ColDef = {
   resizable: true,
   sortable: false, // 禁用排序
   filter: false, // 禁用筛选
@@ -102,9 +103,9 @@ function onGridReady(params: GridReadyEvent) {
   gridApi = params.api;
 
   // 设置无限滚动数据源
-  const datasource = {
+  const datasource: IDatasource = {
     rowCount: undefined, // 未知总行数，会动态更新
-    getRows: async (params: IGetRowsParams) => {
+    getRows: async (params) => {
       const startRow = params.startRow;
       const endRow = params.endRow;
       const limit = endRow - startRow;

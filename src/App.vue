@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { Delete, Download, RefreshLeft, Upload } from '@element-plus/icons-vue';
+import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { open, save } from '@tauri-apps/plugin-dialog';
-import { ElMessage, ElMessageBox } from 'element-plus';
+import { relaunch } from '@tauri-apps/plugin-process';
+import { check } from '@tauri-apps/plugin-updater';
+import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import DataGrid from '@/components/DataGrid.vue';
 import DataInfoBar from '@/components/DataInfoBar.vue';
@@ -14,6 +17,9 @@ const dataStore = useDataStore();
 
 // 导出对话框状态
 const exportDialogVisible = ref(false);
+let unlistenCheckUpdate: UnlistenFn | null = null;
+let updateChecking = false;
+let updateInstalling = false;
 
 // 键盘快捷键处理
 function handleKeyDown(event: KeyboardEvent) {
@@ -36,10 +42,19 @@ function handleKeyDown(event: KeyboardEvent) {
 
 onMounted(() => {
   window.addEventListener('keydown', handleKeyDown);
+  void listen('app://check-update', () => {
+    handleCheckUpdate();
+  }).then((unlisten) => {
+    unlistenCheckUpdate = unlisten;
+  });
 });
 
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyDown);
+  if (unlistenCheckUpdate) {
+    unlistenCheckUpdate();
+    unlistenCheckUpdate = null;
+  }
 });
 
 const hasData = computed(() => dataStore.currentData !== null);
@@ -224,6 +239,79 @@ async function handleClearData() {
     }
   }
 }
+
+async function handleCheckUpdate() {
+  if (updateChecking) return;
+  updateChecking = true;
+
+  try {
+    const update = await check();
+
+    if (!update) {
+      ElNotification({
+        title: '已是最新版本',
+        message: '当前已是最新版本。',
+        type: 'info',
+        duration: 3500,
+      });
+      return;
+    }
+
+    const versionText = update.version ? `v${update.version}` : '新版本';
+    const noticeText = update.body
+      ? `${versionText} 已发布，点击此通知开始更新。`
+      : `检测到 ${versionText}，点击此通知开始更新。`;
+
+    ElNotification({
+      title: '发现新版本',
+      message: noticeText,
+      type: 'success',
+      duration: 0,
+      onClick: async () => {
+        if (updateInstalling) return;
+        updateInstalling = true;
+
+        ElNotification({
+          title: '正在下载更新',
+          message: '更新包下载中，请稍候...',
+          type: 'info',
+          duration: 3000,
+        });
+
+        try {
+          await update.downloadAndInstall();
+          ElNotification({
+            title: '更新完成',
+            message: '应用即将重启以完成更新。',
+            type: 'success',
+            duration: 2500,
+          });
+          await relaunch();
+        } catch (e) {
+          console.error('更新失败:', e);
+          ElNotification({
+            title: '更新失败',
+            message: `更新过程中出现问题: ${e}`,
+            type: 'error',
+            duration: 4500,
+          });
+        } finally {
+          updateInstalling = false;
+        }
+      },
+    });
+  } catch (e) {
+    console.error('检查更新失败:', e);
+    ElNotification({
+      title: '检查更新失败',
+      message: `无法检查更新: ${e}`,
+      type: 'error',
+      duration: 4500,
+    });
+  } finally {
+    updateChecking = false;
+  }
+}
 </script>
 
 <template>
@@ -403,38 +491,5 @@ async function handleClearData() {
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.05);
   z-index: 10;
   overflow: hidden;
-}
-</style>
-
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
-
-#app {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-}
-
-/* 自定义滚动条样式 */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #c0c4cc;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f4f4f5;
 }
 </style>

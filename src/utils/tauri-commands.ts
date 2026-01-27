@@ -197,6 +197,8 @@ export async function fillNull(strategy: FillStrategy): Promise<DatasetInfo> {
  * @param variableName 新的变量列名（可选，默认 "variable"）
  * @param valueName 新的值列名（可选，默认 "value"）
  *
+ * @param sortColumn
+ * @param sortColumn
  * @example
  * // 输入：| name | 2020 | 2021 | 2022 |
  * // 输出：| name | year | sales |
@@ -249,6 +251,10 @@ export async function pivotData(index: string[], columns: string, values: string
  * @param column 要计算的列名
  * @param windowSize 窗口大小
  *
+ * @param center
+ * @param minPeriods
+ * @param center
+ * @param minPeriods
  * @example
  * // 添加新列：sales_rolling_avg_7
  * await rollingAverage('sales', 7);
@@ -377,7 +383,23 @@ export async function rollingVar(
 
 /**
  * 移动分位数 (Rolling Quantile)
+ * @param column
+ * @param windowSize
+ * @param column
+ * @param center
+ * @param minPeriods
+ * @param windowSize
+ * @param column
+ * @param center
+ * @param minPeriods
+ * @param windowSize
+ * @param column
+ * @param center
+ * @param minPeriods
+ * @param windowSize
  * @param quantile 分位数 (0.0 - 1.0)
+ * @param center
+ * @param minPeriods
  */
 export async function rollingQuantile(
   column: string,

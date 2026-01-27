@@ -119,7 +119,7 @@ export const useDataStore = defineStore('data', () => {
   }
 
   /**
-   * 跳转到指定历史节点
+   * 跳转到指定历史节点（预留：历史列表/跳转功能）
    */
   async function jumpTo(entryId: string) {
     loading.value = true;
@@ -550,6 +550,7 @@ export const useDataStore = defineStore('data', () => {
     hasData,
 
     // 历史管理
+    // 预留：历史列表/跳转功能
     loadHistory,
     refreshUndoRedoState,
     undo,

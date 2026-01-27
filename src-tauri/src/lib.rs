@@ -15,6 +15,11 @@
 // Mutex = Mutual Exclusion（互斥锁）：确保同一时间只有一个线程可以访问数据
 use std::sync::{Arc, Mutex};
 
+#[cfg(target_os = "macos")]
+use tauri::Emitter;
+#[cfg(target_os = "macos")]
+use tauri::menu::{AboutMetadata, HELP_SUBMENU_ID, Menu, MenuItem, PredefinedMenuItem, Submenu, WINDOW_SUBMENU_ID};
+
 // ============================================================================
 // 声明模块
 // ============================================================================
@@ -100,6 +105,11 @@ pub struct AppState {
     pub data_store: SharedDataStore,
 }
 
+#[cfg(target_os = "macos")]
+const MENU_CHECK_UPDATE_ID: &str = "menu_check_update";
+#[cfg(target_os = "macos")]
+const MENU_CHECK_UPDATE_EVENT: &str = "app://check-update";
+
 // ============================================================================
 // 应用运行函数
 // ============================================================================
@@ -131,11 +141,19 @@ pub fn run() {
     // ------------------------------------------------------------------------
     // 2. 构建并配置 Tauri 应用
     // ------------------------------------------------------------------------
-    tauri::Builder::default()
+    let builder = tauri::Builder::default()
         // 注册插件：opener 插件用于在默认浏览器中打开 URL
         .plugin(tauri_plugin_opener::init())
         // 注册插件：dialog 插件用于显示文件选择对话框
         .plugin(tauri_plugin_dialog::init())
+        // 注册插件：process 插件用于应用重启
+        .plugin(tauri_plugin_process::init())
+        // 注册插件：updater 插件用于检查与安装更新
+        .setup(|app| {
+            #[cfg(desktop)]
+            app.handle().plugin(tauri_plugin_updater::Builder::new().build())?;
+            Ok(())
+        })
         // 管理应用状态：将 AppState 注册到 Tauri
         // 这样所有的命令都可以通过 State 参数访问这个状态
         .manage(AppState { data_store })
@@ -184,9 +202,90 @@ pub fn run() {
             clear_data,
             // 图表数据生成命令
             generate_chart_data,
-        ])
-        // 运行应用
-        // tauri::generate_context!() 生成应用上下文（从 tauri.conf.json 读取配置）
+        ]);
+
+    #[cfg(target_os = "macos")]
+    let builder = builder
+        .menu(|app| {
+            let pkg_info = app.package_info();
+            let config = app.config();
+            let about_metadata = AboutMetadata {
+                name: Some(pkg_info.name.clone()),
+                version: Some(pkg_info.version.to_string()),
+                    copyright: config.bundle.copyright.clone(),
+                    authors: config.bundle.publisher.clone().map(|publisher| vec![publisher]),
+                    ..Default::default()
+                };
+
+                let app_menu = Submenu::with_items(
+                    app,
+                    pkg_info.name.clone(),
+                    true,
+                    &[
+                        &PredefinedMenuItem::about(app, None, Some(about_metadata))?,
+                        &MenuItem::with_id(app, MENU_CHECK_UPDATE_ID, "检查更新...", true, None::<&str>)?,
+                        &PredefinedMenuItem::separator(app)?,
+                        &PredefinedMenuItem::services(app, None)?,
+                        &PredefinedMenuItem::separator(app)?,
+                        &PredefinedMenuItem::hide(app, None)?,
+                        &PredefinedMenuItem::hide_others(app, None)?,
+                        &PredefinedMenuItem::separator(app)?,
+                        &PredefinedMenuItem::quit(app, None)?,
+                    ],
+                )?;
+
+                let window_menu = Submenu::with_id_and_items(
+                    app,
+                    WINDOW_SUBMENU_ID,
+                    "Window",
+                    true,
+                    &[
+                        &PredefinedMenuItem::minimize(app, None)?,
+                        &PredefinedMenuItem::maximize(app, None)?,
+                        &PredefinedMenuItem::separator(app)?,
+                        &PredefinedMenuItem::close_window(app, None)?,
+                    ],
+                )?;
+
+                let help_menu = Submenu::with_id_and_items(app, HELP_SUBMENU_ID, "Help", true, &[])?;
+
+                Menu::with_items(
+                    app,
+                    &[
+                        &app_menu,
+                        &Submenu::with_items(app, "File", true, &[&PredefinedMenuItem::close_window(app, None)?])?,
+                        &Submenu::with_items(
+                            app,
+                            "Edit",
+                            true,
+                            &[
+                                &PredefinedMenuItem::undo(app, None)?,
+                                &PredefinedMenuItem::redo(app, None)?,
+                                &PredefinedMenuItem::separator(app)?,
+                                &PredefinedMenuItem::cut(app, None)?,
+                                &PredefinedMenuItem::copy(app, None)?,
+                                &PredefinedMenuItem::paste(app, None)?,
+                                &PredefinedMenuItem::select_all(app, None)?,
+                            ],
+                        )?,
+                        &Submenu::with_items(app, "View", true, &[&PredefinedMenuItem::fullscreen(app, None)?])?,
+                        &window_menu,
+                        &help_menu,
+                    ],
+                )
+        })
+        .on_menu_event(|app, event| {
+            if event.id() == MENU_CHECK_UPDATE_ID {
+                let _ = app.emit(MENU_CHECK_UPDATE_EVENT, ());
+            }
+        });
+
+    #[cfg(not(target_os = "macos"))]
+    let builder = builder;
+
+    // 运行应用
+    // tauri::generate_context!() 生成应用上下文（从 tauri.conf.json 读取配置）
+    builder
         .run(tauri::generate_context!())
         // 如果运行失败，程序会 panic（崩溃）并显示错误信息
         .expect("error while running tauri application");
