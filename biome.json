@@ -32,6 +32,9 @@
   "css": {
     "parser": {
       "cssModules": true
+    },
+    "formatter": {
+      "quoteStyle": "single"
     }
   },
   "linter": {
@@ -45,6 +48,6 @@
     }
   },
   "files": {
-    "includes": ["*/**", "pretter.config.ts", "vite.config.ts", "!public", "!src-tauri", "!node_modules"]
+    "includes": ["*/**", "pretter.config.ts", "vite.config.ts", "!public", "!src-tauri", "!node_modules", "!target"]
   }
 }
