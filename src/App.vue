@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { Delete, Download, RefreshLeft, Upload } from '@element-plus/icons-vue';
 import { getName, getVersion } from '@tauri-apps/api/app';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
@@ -7,6 +7,7 @@ import { relaunch } from '@tauri-apps/plugin-process';
 import { check } from '@tauri-apps/plugin-updater';
 import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
+import AboutDialog from '@/components/AboutDialog.vue';
 import DataGrid from '@/components/DataGrid.vue';
 import DataInfoBar from '@/components/DataInfoBar.vue';
 import ExportDialog from '@/components/dialogs/ExportDialog.vue';
@@ -22,7 +23,10 @@ const appName = ref('');
 
 // 导出对话框状态
 const exportDialogVisible = ref(false);
+// 关于对话框状态
+const aboutDialogVisible = ref(false);
 let unlistenCheckUpdate: UnlistenFn | null = null;
+let unlistenShowAbout: UnlistenFn | null = null;
 let updateChecking = false;
 let updateInstalling = false;
 
@@ -52,6 +56,11 @@ onMounted(() => {
   }).then((unlisten) => {
     unlistenCheckUpdate = unlisten;
   });
+  void listen('app://show-about', () => {
+    aboutDialogVisible.value = true;
+  }).then((unlisten) => {
+    unlistenShowAbout = unlisten;
+  });
 });
 
 onMounted(async () => {
@@ -65,6 +74,10 @@ onUnmounted(() => {
   if (unlistenCheckUpdate) {
     unlistenCheckUpdate();
     unlistenCheckUpdate = null;
+  }
+  if (unlistenShowAbout) {
+    unlistenShowAbout();
+    unlistenShowAbout = null;
   }
 });
 
@@ -327,26 +340,26 @@ async function handleCheckUpdate() {
 
 <template>
   <el-container
-    class="app-container"
     v-loading="dataStore.loading"
     :element-loading-text="loadingText"
+    class="app-container"
     element-loading-background="rgba(0, 0, 0, 0.7)"
   >
     <!-- Header -->
     <el-header class="app-header" height="56px">
       <div class="header-left">
         <div class="app-title">{{ appName || '...' }}</div>
-        <el-tag type="info" size="small">{{ appVersion || 'v--' }}</el-tag>
+        <el-tag size="small" type="info">{{ appVersion || 'v--' }}</el-tag>
       </div>
       <div class="header-right">
-        <el-button type="primary" plain :icon="Upload" @click="handleImportData"> 导入数据 </el-button>
-        <el-button type="success" plain :icon="Download" @click="handleExportData" :disabled="!hasData">
+        <el-button :icon="Upload" plain type="primary" @click="handleImportData"> 导入数据 </el-button>
+        <el-button :disabled="!hasData" :icon="Download" plain type="success" @click="handleExportData">
           导出数据
         </el-button>
-        <el-button type="warning" plain :icon="RefreshLeft" @click="handleResetData" :disabled="!hasData">
+        <el-button :disabled="!hasData" :icon="RefreshLeft" plain type="warning" @click="handleResetData">
           重置数据
         </el-button>
-        <el-button type="danger" plain :icon="Delete" @click="handleClearData" :disabled="!hasData">
+        <el-button :disabled="!hasData" :icon="Delete" plain type="danger" @click="handleClearData">
           清空数据
         </el-button>
       </div>
@@ -354,7 +367,7 @@ async function handleCheckUpdate() {
 
     <el-container class="main-container">
       <!-- Left Sidebar -->
-      <el-aside width="280px" class="left-sidebar">
+      <el-aside class="left-sidebar" width="280px">
         <Sidebar />
       </el-aside>
 
@@ -377,13 +390,16 @@ async function handleCheckUpdate() {
       </el-main>
 
       <!-- Right Sidebar -->
-      <el-aside width="300px" class="right-sidebar">
+      <el-aside class="right-sidebar" width="300px">
         <RightSidebar />
       </el-aside>
     </el-container>
 
     <!-- 导出对话框 -->
     <ExportDialog v-model:visible="exportDialogVisible" @confirm="handleExportConfirm" />
+
+    <!-- 关于对话框 -->
+    <AboutDialog v-model="aboutDialogVisible" />
   </el-container>
 </template>
 

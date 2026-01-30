@@ -18,7 +18,7 @@ use std::sync::{Arc, Mutex};
 #[cfg(target_os = "macos")]
 use tauri::Emitter;
 #[cfg(target_os = "macos")]
-use tauri::menu::{AboutMetadata, HELP_SUBMENU_ID, Menu, MenuItem, PredefinedMenuItem, Submenu, WINDOW_SUBMENU_ID};
+use tauri::menu::{HELP_SUBMENU_ID, Menu, MenuItem, PredefinedMenuItem, Submenu, WINDOW_SUBMENU_ID};
 
 // ============================================================================
 // 声明模块
@@ -109,6 +109,10 @@ pub struct AppState {
 const MENU_CHECK_UPDATE_ID: &str = "menu_check_update";
 #[cfg(target_os = "macos")]
 const MENU_CHECK_UPDATE_EVENT: &str = "app://check-update";
+#[cfg(target_os = "macos")]
+const MENU_ABOUT_ID: &str = "menu_about";
+#[cfg(target_os = "macos")]
+const MENU_ABOUT_EVENT: &str = "app://show-about";
 
 // ============================================================================
 // 应用运行函数
@@ -208,75 +212,70 @@ pub fn run() {
     let builder = builder
         .menu(|app| {
             let pkg_info = app.package_info();
-            let config = app.config();
-            let about_metadata = AboutMetadata {
-                name: Some(pkg_info.name.clone()),
-                version: Some(pkg_info.version.to_string()),
-                    copyright: config.bundle.copyright.clone(),
-                    authors: config.bundle.publisher.clone().map(|publisher| vec![publisher]),
-                    ..Default::default()
-                };
+            let about_menu_text = format!("关于 {}", pkg_info.name);
 
-                let app_menu = Submenu::with_items(
-                    app,
-                    pkg_info.name.clone(),
-                    true,
-                    &[
-                        &PredefinedMenuItem::about(app, None, Some(about_metadata))?,
-                        &MenuItem::with_id(app, MENU_CHECK_UPDATE_ID, "检查更新...", true, None::<&str>)?,
-                        &PredefinedMenuItem::separator(app)?,
-                        &PredefinedMenuItem::services(app, None)?,
-                        &PredefinedMenuItem::separator(app)?,
-                        &PredefinedMenuItem::hide(app, None)?,
-                        &PredefinedMenuItem::hide_others(app, None)?,
-                        &PredefinedMenuItem::separator(app)?,
-                        &PredefinedMenuItem::quit(app, None)?,
-                    ],
-                )?;
+            let app_menu = Submenu::with_items(
+                app,
+                pkg_info.name.clone(),
+                true,
+                &[
+                    &MenuItem::with_id(app, MENU_ABOUT_ID, about_menu_text, true, None::<&str>)?,
+                    &MenuItem::with_id(app, MENU_CHECK_UPDATE_ID, "检查更新...", true, None::<&str>)?,
+                    &PredefinedMenuItem::separator(app)?,
+                    &PredefinedMenuItem::services(app, None)?,
+                    &PredefinedMenuItem::separator(app)?,
+                    &PredefinedMenuItem::hide(app, None)?,
+                    &PredefinedMenuItem::hide_others(app, None)?,
+                    &PredefinedMenuItem::separator(app)?,
+                    &PredefinedMenuItem::quit(app, None)?,
+                ],
+            )?;
 
-                let window_menu = Submenu::with_id_and_items(
-                    app,
-                    WINDOW_SUBMENU_ID,
-                    "Window",
-                    true,
-                    &[
-                        &PredefinedMenuItem::minimize(app, None)?,
-                        &PredefinedMenuItem::maximize(app, None)?,
-                        &PredefinedMenuItem::separator(app)?,
-                        &PredefinedMenuItem::close_window(app, None)?,
-                    ],
-                )?;
+            let window_menu = Submenu::with_id_and_items(
+                app,
+                WINDOW_SUBMENU_ID,
+                "Window",
+                true,
+                &[
+                    &PredefinedMenuItem::minimize(app, None)?,
+                    &PredefinedMenuItem::maximize(app, None)?,
+                    &PredefinedMenuItem::separator(app)?,
+                    &PredefinedMenuItem::close_window(app, None)?,
+                ],
+            )?;
 
-                let help_menu = Submenu::with_id_and_items(app, HELP_SUBMENU_ID, "Help", true, &[])?;
+            let help_menu = Submenu::with_id_and_items(app, HELP_SUBMENU_ID, "Help", true, &[])?;
 
-                Menu::with_items(
-                    app,
-                    &[
-                        &app_menu,
-                        &Submenu::with_items(app, "File", true, &[&PredefinedMenuItem::close_window(app, None)?])?,
-                        &Submenu::with_items(
-                            app,
-                            "Edit",
-                            true,
-                            &[
-                                &PredefinedMenuItem::undo(app, None)?,
-                                &PredefinedMenuItem::redo(app, None)?,
-                                &PredefinedMenuItem::separator(app)?,
-                                &PredefinedMenuItem::cut(app, None)?,
-                                &PredefinedMenuItem::copy(app, None)?,
-                                &PredefinedMenuItem::paste(app, None)?,
-                                &PredefinedMenuItem::select_all(app, None)?,
-                            ],
-                        )?,
-                        &Submenu::with_items(app, "View", true, &[&PredefinedMenuItem::fullscreen(app, None)?])?,
-                        &window_menu,
-                        &help_menu,
-                    ],
-                )
+            Menu::with_items(
+                app,
+                &[
+                    &app_menu,
+                    &Submenu::with_items(app, "File", true, &[&PredefinedMenuItem::close_window(app, None)?])?,
+                    &Submenu::with_items(
+                        app,
+                        "Edit",
+                        true,
+                        &[
+                            &PredefinedMenuItem::undo(app, None)?,
+                            &PredefinedMenuItem::redo(app, None)?,
+                            &PredefinedMenuItem::separator(app)?,
+                            &PredefinedMenuItem::cut(app, None)?,
+                            &PredefinedMenuItem::copy(app, None)?,
+                            &PredefinedMenuItem::paste(app, None)?,
+                            &PredefinedMenuItem::select_all(app, None)?,
+                        ],
+                    )?,
+                    &Submenu::with_items(app, "View", true, &[&PredefinedMenuItem::fullscreen(app, None)?])?,
+                    &window_menu,
+                    &help_menu,
+                ],
+            )
         })
         .on_menu_event(|app, event| {
             if event.id() == MENU_CHECK_UPDATE_ID {
                 let _ = app.emit(MENU_CHECK_UPDATE_EVENT, ());
+            } else if event.id() == MENU_ABOUT_ID {
+                let _ = app.emit(MENU_ABOUT_EVENT, ());
             }
         });
 
