@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Delete, Download, RefreshLeft, Upload } from '@element-plus/icons-vue';
+import { getName, getVersion } from '@tauri-apps/api/app';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { open, save } from '@tauri-apps/plugin-dialog';
 import { relaunch } from '@tauri-apps/plugin-process';
@@ -14,6 +15,10 @@ import Sidebar from '@/components/Sidebar.vue';
 import { useDataStore } from '@/stores/dataStore';
 
 const dataStore = useDataStore();
+
+// 软件信息
+const appVersion = ref('');
+const appName = ref('');
 
 // 导出对话框状态
 const exportDialogVisible = ref(false);
@@ -47,6 +52,12 @@ onMounted(() => {
   }).then((unlisten) => {
     unlistenCheckUpdate = unlisten;
   });
+});
+
+onMounted(async () => {
+  const version = await getVersion();
+  appVersion.value = `v${version}`;
+  appName.value = await getName();
 });
 
 onUnmounted(() => {
@@ -324,8 +335,8 @@ async function handleCheckUpdate() {
     <!-- Header -->
     <el-header class="app-header" height="56px">
       <div class="header-left">
-        <div class="app-title">DataVis Pro</div>
-        <el-tag type="info" size="small">v0.1.0</el-tag>
+        <div class="app-title">{{ appName || '...' }}</div>
+        <el-tag type="info" size="small">{{ appVersion || 'v--' }}</el-tag>
       </div>
       <div class="header-right">
         <el-button type="primary" plain :icon="Upload" @click="handleImportData"> 导入数据 </el-button>
