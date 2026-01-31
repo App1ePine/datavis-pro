@@ -1,16 +1,24 @@
 <template>
   <div class="sidebar-panel">
     <!-- 标题 -->
-    <div class="sidebar-title">操作面板</div>
+    <div class="sidebar-header">
+      <el-icon class="header-icon"><Operation /></el-icon>
+      <div class="header-text">
+        <div class="header-title">工具箱</div>
+        <div class="header-subtitle">数据处理工具</div>
+      </div>
+    </div>
 
     <!-- Undo/Redo 按钮区域 -->
     <div class="undo-redo-section">
       <el-button-group class="undo-redo-group">
-        <el-button size="small" :disabled="!dataStore.canUndoFlag" @click="handleUndo" title="撤销 (Ctrl+Z)">
-          ↶ 撤销
+        <el-button :disabled="!dataStore.canUndoFlag" size="default" title="撤销 (Ctrl+Z)" @click="handleUndo">
+          <el-icon><Back /></el-icon>
+          <span>撤销</span>
         </el-button>
-        <el-button size="small" :disabled="!dataStore.canRedoFlag" @click="handleRedo" title="重做 (Ctrl+Shift+Z)">
-          ↷ 重做
+        <el-button :disabled="!dataStore.canRedoFlag" size="default" title="重做 (Ctrl+Shift+Z)" @click="handleRedo">
+          <span>重做</span>
+          <el-icon><Right /></el-icon>
         </el-button>
       </el-button-group>
     </div>
@@ -20,70 +28,105 @@
       <div class="panel-content">
         <el-collapse v-model="activeNames">
           <!-- 数据清洗 -->
-          <el-collapse-item title="数据清洗" name="1">
+          <el-collapse-item name="1">
+            <template #title>
+              <div class="collapse-title">
+                <el-icon class="title-icon"><Filter /></el-icon>
+                <span>数据清洗</span>
+              </div>
+            </template>
             <div class="operation-list">
               <el-button size="small" class="operation-btn" @click="showFilterDialog" :disabled="!hasData">
-                🔍 筛选过滤
+                <el-icon><Search /></el-icon>
+                <span>筛选过滤</span>
               </el-button>
               <el-button size="small" class="operation-btn" @click="showDropColumnsDialog" :disabled="!hasData">
-                🚮 删除列
+                <el-icon><Delete /></el-icon>
+                <span>删除列</span>
               </el-button>
               <el-button size="small" class="operation-btn" @click="showSelectColumnsDialog" :disabled="!hasData">
-                ✅ 选择列
+                <el-icon><Select /></el-icon>
+                <span>选择列</span>
               </el-button>
               <el-button size="small" class="operation-btn" @click="handleDropNulls" :disabled="!hasData">
-                🗑️ 删除空值行
+                <el-icon><RemoveFilled /></el-icon>
+                <span>删除空值行</span>
               </el-button>
               <el-button size="small" class="operation-btn" @click="handleDropAllNulls" :disabled="!hasData">
-                🗑️ 删除全空行
+                <el-icon><RemoveFilled /></el-icon>
+                <span>删除全空行</span>
               </el-button>
               <el-button size="small" class="operation-btn" @click="showFillNullDialog" :disabled="!hasData">
-                ✨ 填充空值
+                <el-icon><MagicStick /></el-icon>
+                <span>填充空值</span>
               </el-button>
               <el-button size="small" class="operation-btn" @click="showRenameColumnsDialog" :disabled="!hasData">
-                📝 更改列名称
+                <el-icon><Edit /></el-icon>
+                <span>更改列名称</span>
               </el-button>
               <el-button size="small" class="operation-btn" @click="showCastTypesDialog" :disabled="!hasData">
-                🆔 更改列类型
+                <el-icon><Switch /></el-icon>
+                <span>更改列类型</span>
               </el-button>
             </div>
           </el-collapse-item>
 
           <!-- 数据转换 -->
-          <el-collapse-item title="数据转换" name="2">
+          <el-collapse-item name="2">
+            <template #title>
+              <div class="collapse-title">
+                <el-icon class="title-icon"><Refresh /></el-icon>
+                <span>数据转换</span>
+              </div>
+            </template>
             <div class="operation-list">
               <el-button size="small" class="operation-btn" @click="showPivotDialog" :disabled="!hasData">
-                🔃 长表转宽表
+                <el-icon><Sort /></el-icon>
+                <span>长表转宽表</span>
               </el-button>
               <el-button size="small" class="operation-btn" @click="showUnpivotDialog" :disabled="!hasData">
-                🔄 宽表转长表
+                <el-icon><Sort /></el-icon>
+                <span>宽表转长表</span>
               </el-button>
               <el-button size="small" class="operation-btn" @click="showRollingDialog" :disabled="!hasData">
-                📊 滑动窗口
+                <el-icon><TrendCharts /></el-icon>
+                <span>滑动窗口</span>
               </el-button>
               <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showSortDialog">
-                📶 排序
+                <el-icon><Sort /></el-icon>
+                <span>排序</span>
               </el-button>
             </div>
           </el-collapse-item>
 
           <!-- 可视化 -->
-          <el-collapse-item title="可视化" name="3">
+          <el-collapse-item name="3">
+            <template #title>
+              <div class="collapse-title">
+                <el-icon class="title-icon"><PieChart /></el-icon>
+                <span>可视化</span>
+              </div>
+            </template>
             <div class="operation-list">
               <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showLineChartDialog">
-                📈 折线图
+                <el-icon><TrendCharts /></el-icon>
+                <span>折线图</span>
               </el-button>
               <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showBarChartDialog">
-                📊 柱状图
+                <el-icon><Histogram /></el-icon>
+                <span>柱状图</span>
               </el-button>
               <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showScatterChartDialog">
-                🔵 散点图
+                <el-icon><CirclePlus /></el-icon>
+                <span>散点图</span>
               </el-button>
               <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showPieChartDialog">
-                🥧 饼图
+                <el-icon><PieChart /></el-icon>
+                <span>饼图</span>
               </el-button>
               <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showHistogramChartDialog">
-                📊 直方图
+                <el-icon><Histogram /></el-icon>
+                <span>直方图</span>
               </el-button>
             </div>
           </el-collapse-item>
@@ -129,6 +172,25 @@
 </template>
 
 <script setup lang="ts">
+import {
+  Back,
+  CirclePlus,
+  Delete,
+  Edit,
+  Filter,
+  Histogram,
+  MagicStick,
+  Operation,
+  PieChart,
+  Refresh,
+  RemoveFilled,
+  Right,
+  Search,
+  Select,
+  Sort,
+  Switch,
+  TrendCharts,
+} from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { computed, ref } from 'vue';
 import { useDataStore } from '@/stores/dataStore';
@@ -381,31 +443,70 @@ async function handleSortConfirm(payload: { column: string; descending: boolean;
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #f5f7fa;
+  background-color: #ffffff;
 }
 
-.sidebar-title {
-  padding: 12px 16px;
-  background-color: #e4e7ed;
-  border-bottom: 1px solid #dcdfe6;
-  font-weight: 500;
-  color: #606266;
-  font-size: 14px;
+.sidebar-header {
+  padding: 20px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e4e7ed;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-icon {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.header-text {
+  flex: 1;
+}
+
+.header-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #303133;
+  line-height: 1.3;
+  margin-bottom: 2px;
+}
+
+.header-subtitle {
+  font-size: 12px;
+  color: #909399;
+  line-height: 1;
 }
 
 .undo-redo-section {
-  padding: 12px 16px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e4e7ed;
+  padding: 16px;
+  background-color: #f5f7fa;
+  border-bottom: 1px solid #dcdfe6;
 }
 
 .undo-redo-group {
   width: 100%;
   display: flex;
+  margin-bottom: 12px;
 }
 
 .undo-redo-group .el-button {
   flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.history-info {
+  text-align: center;
+  margin-top: 8px;
+}
+
+.history-text {
+  font-size: 12px;
+  color: #909399;
+  font-family: 'Courier New', monospace;
 }
 
 .sidebar-scrollbar {
@@ -414,20 +515,23 @@ async function handleSortConfirm(payload: { column: string; descending: boolean;
 }
 
 .panel-content {
-  padding: 8px;
+  padding: 16px;
 }
 
 .operation-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 4px;
+  padding: 12px;
 }
 
 .operation-btn {
   width: 100%;
   justify-content: flex-start;
   margin-left: 0 !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 :deep(.el-collapse) {
@@ -435,19 +539,33 @@ async function handleSortConfirm(payload: { column: string; descending: boolean;
 }
 
 :deep(.el-collapse-item) {
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   background: white;
-  border-radius: 4px;
+  border-radius: 8px;
   overflow: hidden;
+  border: 1px solid #ebeef5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
 :deep(.el-collapse-item__header) {
-  background: white;
+  background: #fafafa;
   border: none;
-  padding: 0 12px;
-  font-size: 13px;
-  font-weight: 500;
-  height: 40px;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 600;
+  height: 48px;
+  color: #303133;
+}
+
+.collapse-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.title-icon {
+  font-size: 18px;
+  color: #409eff;
 }
 
 :deep(.el-collapse-item__wrap) {
@@ -456,6 +574,6 @@ async function handleSortConfirm(payload: { column: string; descending: boolean;
 }
 
 :deep(.el-collapse-item__content) {
-  padding: 8px 12px 12px;
+  padding: 0;
 }
 </style>

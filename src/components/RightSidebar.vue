@@ -1,116 +1,142 @@
 <template>
   <div class="right-sidebar">
     <div class="sidebar-header">
-      <span class="header-title">列统计信息</span>
-      <el-tag v-if="columnStats" size="small" type="primary" class="column-tag" :title="columnStats.name">
-        {{ columnStats.name }}
-      </el-tag>
+      <el-icon class="header-icon"><DataBoard /></el-icon>
+      <div class="header-text">
+        <div class="header-title">列统计</div>
+        <div v-if="columnStats" class="header-subtitle">{{ columnStats.name }}</div>
+        <div v-else class="header-subtitle">点击单元格查看</div>
+      </div>
     </div>
 
     <el-scrollbar class="sidebar-content">
       <div v-if="columnStats" class="stats-section">
         <!-- 基础统计 - 根据实际数据判断显示 -->
         <template v-if="hasBasicStats">
-          <h4 class="section-title">
-            基础统计
-            <span class="dtype-suffix">{{ columnStats.dtype }}</span>
-          </h4>
+          <div class="stats-card">
+            <div class="card-header">
+              <h4 class="card-title">基础统计</h4>
+              <el-tag size="small" type="info">{{ columnStats.dtype }}</el-tag>
+            </div>
 
-          <!-- 数值类型的基础统计 -->
-          <el-descriptions v-if="hasNumericStats" direction="vertical" :column="1" border size="small">
-            <el-descriptions-item label="最大值">
-              {{ columnStats.max !== null ? columnStats.max.toFixed(2) : 'N/A' }}
-            </el-descriptions-item>
-            <el-descriptions-item label="最小值">
-              {{ columnStats.min !== null ? columnStats.min.toFixed(2) : 'N/A' }}
-            </el-descriptions-item>
-            <el-descriptions-item label="平均值">
-              {{ columnStats.mean !== null ? columnStats.mean.toFixed(2) : 'N/A' }}
-            </el-descriptions-item>
-            <el-descriptions-item label="标准差">
-              {{ columnStats.std !== null ? columnStats.std.toFixed(2) : 'N/A' }}
-            </el-descriptions-item>
-          </el-descriptions>
+            <!-- 数值类型的基础统计 -->
+            <div v-if="hasNumericStats" class="stats-grid">
+              <div class="stat-item">
+                <span class="stat-label">最大值</span>
+                <span class="stat-value">{{ columnStats.max !== null ? columnStats.max.toFixed(2) : 'N/A' }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">最小值</span>
+                <span class="stat-value">{{ columnStats.min !== null ? columnStats.min.toFixed(2) : 'N/A' }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">平均值</span>
+                <span class="stat-value">{{ columnStats.mean !== null ? columnStats.mean.toFixed(2) : 'N/A' }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">标准差</span>
+                <span class="stat-value">{{ columnStats.std !== null ? columnStats.std.toFixed(2) : 'N/A' }}</span>
+              </div>
+            </div>
 
-          <!-- 日期时间类型的基础统计 -->
-          <el-descriptions v-else-if="hasDatetimeStats" direction="vertical" :column="1" border size="small">
-            <el-descriptions-item label="最早时间">
-              {{ columnStats.min_datetime || 'N/A' }}
-            </el-descriptions-item>
-            <el-descriptions-item label="最晚时间">
-              {{ columnStats.max_datetime || 'N/A' }}
-            </el-descriptions-item>
-            <el-descriptions-item label="时间跨度 (天)">
-              {{ columnStats.datetime_range_days !== null ? columnStats.datetime_range_days.toFixed(2) : 'N/A' }}
-            </el-descriptions-item>
-          </el-descriptions>
+            <!-- 日期时间类型的基础统计 -->
+            <div v-else-if="hasDatetimeStats" class="stats-grid">
+              <div class="stat-item">
+                <span class="stat-label">最早时间</span>
+                <span class="stat-value">{{ columnStats.min_datetime || 'N/A' }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">最晚时间</span>
+                <span class="stat-value">{{ columnStats.max_datetime || 'N/A' }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">时间跨度 (天)</span>
+                <span class="stat-value">{{
+                  columnStats.datetime_range_days !== null ? columnStats.datetime_range_days.toFixed(2) : 'N/A'
+                }}</span>
+              </div>
+            </div>
 
-          <!-- 布尔类型的基础统计 -->
-          <el-descriptions v-else-if="hasBooleanStats" direction="vertical" :column="1" border size="small">
-            <el-descriptions-item label="True 数量">
-              {{ columnStats.true_count !== null ? columnStats.true_count.toLocaleString() : 'N/A' }}
-            </el-descriptions-item>
-            <el-descriptions-item label="False 数量">
-              {{ columnStats.false_count !== null ? columnStats.false_count.toLocaleString() : 'N/A' }}
-            </el-descriptions-item>
-          </el-descriptions>
-
-          <div class="spacer"></div>
+            <!-- 布尔类型的基础统计 -->
+            <div v-else-if="hasBooleanStats" class="stats-grid">
+              <div class="stat-item">
+                <span class="stat-label">True 数量</span>
+                <span class="stat-value">{{
+                  columnStats.true_count !== null ? columnStats.true_count.toLocaleString() : 'N/A'
+                }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">False 数量</span>
+                <span class="stat-value">{{
+                  columnStats.false_count !== null ? columnStats.false_count.toLocaleString() : 'N/A'
+                }}</span>
+              </div>
+            </div>
+          </div>
         </template>
 
         <!-- 分布概览 - 仅当有分位数数据时显示 -->
         <template v-if="hasDistributionStats">
-          <h4 class="section-title distribution">分布概览</h4>
-          <el-descriptions direction="vertical" :column="1" border size="small">
-            <el-descriptions-item label="25% 分位值">
-              {{ columnStats.q25 !== null ? columnStats.q25.toFixed(2) : 'N/A' }}
-            </el-descriptions-item>
-            <el-descriptions-item label="50% 分位值">
-              {{ columnStats.q50 !== null ? columnStats.q50.toFixed(2) : 'N/A' }}
-            </el-descriptions-item>
-            <el-descriptions-item label="75% 分位值">
-              {{ columnStats.q75 !== null ? columnStats.q75.toFixed(2) : 'N/A' }}
-            </el-descriptions-item>
-          </el-descriptions>
-
-          <div class="spacer"></div>
+          <div class="stats-card">
+            <div class="card-header">
+              <h4 class="card-title">分布概览</h4>
+            </div>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <span class="stat-label">25% 分位值</span>
+                <span class="stat-value">{{ columnStats.q25 !== null ? columnStats.q25.toFixed(2) : 'N/A' }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">50% 分位值</span>
+                <span class="stat-value">{{ columnStats.q50 !== null ? columnStats.q50.toFixed(2) : 'N/A' }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">75% 分位值</span>
+                <span class="stat-value">{{ columnStats.q75 !== null ? columnStats.q75.toFixed(2) : 'N/A' }}</span>
+              </div>
+            </div>
+          </div>
         </template>
 
         <!-- 数据质量 - 始终显示（基于 total_count, null_count, unique_count） -->
         <template v-if="hasQualityStats">
-          <h4 class="section-title quality">
-            数据质量
-            <span v-if="!hasBasicStats" class="dtype-suffix">{{ columnStats.dtype }}</span>
-          </h4>
-          <div class="quality-card">
-            <div class="quality-item">
-              <span class="quality-label">总数目:</span>
-              <span class="quality-value">{{ columnStats.total_count.toLocaleString() }}</span>
+          <div class="stats-card quality">
+            <div class="card-header">
+              <h4 class="card-title">数据质量</h4>
+              <el-tag v-if="!hasBasicStats" size="small" type="info">{{ columnStats.dtype }}</el-tag>
             </div>
-            <div class="quality-item">
-              <span class="quality-label">缺失值 (Null):</span>
-              <span class="quality-value" :class="columnStats.null_count === 0 ? 'success' : 'error'">
-                {{ columnStats.null_count }} ({{
-                  ((columnStats.null_count / columnStats.total_count) * 100).toFixed(1)
-                }}%)
-              </span>
-            </div>
-            <div class="quality-item">
-              <span class="quality-label">唯一值 (Unique):</span>
-              <span class="quality-value">{{ columnStats.unique_count }}</span>
+            <div class="quality-items">
+              <div class="quality-item">
+                <div class="quality-label">总数目</div>
+                <div class="quality-value">{{ columnStats.total_count.toLocaleString() }}</div>
+              </div>
+              <div class="quality-item">
+                <div class="quality-label">缺失值</div>
+                <div :class="columnStats.null_count === 0 ? 'success' : 'error'" class="quality-value">
+                  {{ columnStats.null_count }} ({{
+                    ((columnStats.null_count / columnStats.total_count) * 100).toFixed(1)
+                  }}%)
+                </div>
+              </div>
+              <div class="quality-item">
+                <div class="quality-label">唯一值</div>
+                <div class="quality-value">{{ columnStats.unique_count }}</div>
+              </div>
             </div>
           </div>
         </template>
       </div>
 
       <div v-else class="empty-container">
-        <el-empty description="请点击表格中的任意单元格查看列统计信息" :image-size="100" />
+        <el-empty v-if="!dataStore.hasData" :image-size="100" description="暂无数据" />
+        <el-empty v-else :image-size="100" description="请点击表格中的任意单元格查看列统计信息" />
       </div>
     </el-scrollbar>
   </div>
 </template>
 
 <script setup lang="ts">
+import { DataBoard } from '@element-plus/icons-vue';
 import { computed } from 'vue';
 import { useDataStore } from '@/stores/dataStore';
 
@@ -173,25 +199,36 @@ const hasQualityStats = computed(() => {
 }
 
 .sidebar-header {
-  padding: 12px 16px;
-  background-color: #ecf5ff;
-  border-bottom: 1px solid #d9ecff;
+  padding: 20px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e4e7ed;
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.header-title {
-  color: #409eff;
-  font-weight: 500;
-  font-size: 14px;
-  flex-shrink: 0;
-  white-space: nowrap;
+.header-icon {
+  font-size: 28px;
+  line-height: 1;
 }
 
-.column-tag {
+.header-text {
   flex: 1;
   min-width: 0;
+}
+
+.header-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #303133;
+  line-height: 1.3;
+  margin-bottom: 2px;
+}
+
+.header-subtitle {
+  font-size: 12px;
+  color: #909399;
+  line-height: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -200,6 +237,7 @@ const hasQualityStats = computed(() => {
 .sidebar-content {
   flex: 1;
   height: 0;
+  background-color: #f5f7fa;
 }
 
 .sidebar-content :deep(.el-scrollbar__view) {
@@ -211,74 +249,133 @@ const hasQualityStats = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 40px 20px;
+}
+
+.empty-content {
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+
+.empty-text {
+  font-size: 14px;
+  color: #606266;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.empty-subtext {
+  font-size: 12px;
+  color: #909399;
 }
 
 .stats-section {
   padding: 16px;
 }
 
-.section-title {
-  font-size: 15px;
-  font-weight: bold;
+.stats-card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #ebeef5;
+}
+
+.stats-card.quality {
+  background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.card-title {
+  font-size: 14px;
+  font-weight: 600;
   color: #303133;
-  margin: 0 0 12px 0;
-  padding-left: 8px;
-  border-left: 4px solid #409eff;
+  margin: 0;
 }
 
-.dtype-suffix {
-  font-size: 12px;
-  font-weight: normal;
-  color: #909399;
-  margin-left: 8px;
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
 }
 
-.section-title.distribution {
-  border-left-color: #67c23a;
-}
-
-.section-title.quality {
-  border-left-color: #e6a23c;
-}
-
-.spacer {
-  height: 16px;
-}
-
-.quality-card {
-  background-color: #f5f7fa;
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: #f5f7fa;
   border-radius: 4px;
-  padding: 12px;
+  transition: all 0.2s;
+}
+
+.stat-item:hover {
+  background: #ecf5ff;
+}
+
+.stat-label {
   font-size: 13px;
+  color: #606266;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: #303133;
+}
+
+.quality-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .quality-item {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-
-.quality-item:last-child {
-  margin-bottom: 0;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 6px;
+  border: 1px solid #f0f0f0;
 }
 
 .quality-label {
+  font-size: 12px;
   color: #909399;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .quality-value {
   font-family: 'Courier New', monospace;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 700;
   color: #303133;
 }
 
 .quality-value.error {
   color: #f56c6c;
-  font-weight: bold;
 }
 
 .quality-value.success {
   color: #67c23a;
-  font-weight: bold;
 }
 </style>

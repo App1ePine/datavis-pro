@@ -1,27 +1,25 @@
 <template>
-  <div class="data-grid-container">
-    <ag-grid-vue
-      v-if="dataStore.currentDataset"
-      style="width: 100%; height: 100%"
-      :theme="myTheme"
-      :columnDefs="columnDefs"
-      :defaultColDef="defaultColDef"
-      :rowModelType="'infinite'"
-      :cacheBlockSize="100"
-      :cacheOverflowSize="2"
-      :maxConcurrentDatasourceRequests="1"
-      :infiniteInitialRowCount="1000"
-      :maxBlocksInCache="10"
-      :enableCellTextSelection="true"
-      :ensureDomOrder="true"
-      @grid-ready="onGridReady"
-      @cell-clicked="onCellClicked"
-    />
-    <el-empty v-else description="暂无数据" />
-  </div>
+  <ag-grid-vue
+    v-if="dataStore.currentDataset"
+    :cacheBlockSize="100"
+    :cacheOverflowSize="2"
+    :columnDefs="columnDefs"
+    :defaultColDef="defaultColDef"
+    :enableCellTextSelection="true"
+    :ensureDomOrder="true"
+    :infiniteInitialRowCount="1000"
+    :maxBlocksInCache="10"
+    :maxConcurrentDatasourceRequests="1"
+    :rowModelType="'infinite'"
+    :theme="myTheme"
+    style="width: 100%; height: 100%"
+    @grid-ready="onGridReady"
+    @cell-clicked="onCellClicked"
+  />
+  <el-empty v-else description="暂无数据" />
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import type {
   CellClickedEvent,
   ColDef,
@@ -169,12 +167,6 @@ watch(
 </script>
 
 <style scoped>
-.data-grid-container {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
 .loading-overlay {
   position: absolute;
   top: 0;
