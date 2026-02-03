@@ -16,9 +16,9 @@
 use std::sync::{Arc, Mutex};
 
 #[cfg(target_os = "macos")]
-use tauri::Emitter;
-#[cfg(target_os = "macos")]
 use tauri::menu::{HELP_SUBMENU_ID, Menu, MenuItem, PredefinedMenuItem, Submenu, WINDOW_SUBMENU_ID};
+#[cfg(target_os = "macos")]
+use tauri::{Emitter, Manager};
 
 // ============================================================================
 // 声明模块
@@ -210,6 +210,13 @@ pub fn run() {
 
     #[cfg(target_os = "macos")]
     let builder = builder
+        .on_window_event(|window, event| {
+            // 在 macOS 上，点击关闭按钮时隐藏窗口而不是退出应用
+            if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                api.prevent_close();
+                let _ = window.hide();
+            }
+        })
         .menu(|app| {
             let pkg_info = app.package_info();
             let about_menu_text = format!("关于 {}", pkg_info.name);
@@ -284,10 +291,26 @@ pub fn run() {
 
     // 运行应用
     // tauri::generate_context!() 生成应用上下文（从 tauri.conf.json 读取配置）
+    #[cfg(not(target_os = "macos"))]
     builder
         .run(tauri::generate_context!())
         // 如果运行失败，程序会 panic（崩溃）并显示错误信息
         .expect("error while running tauri application");
+
+    // macOS 特殊处理：监听 Dock 图标点击事件
+    #[cfg(target_os = "macos")]
+    builder
+        .build(tauri::generate_context!())
+        .expect("error while building tauri application")
+        .run(|app_handle, event| {
+            // 监听 macOS 的 Reopen 事件（点击 Dock 图标）
+            if let tauri::RunEvent::Reopen { .. } = event {
+                if let Some(window) = app_handle.get_webview_window("main") {
+                    let _ = window.show();
+                    let _ = window.set_focus();
+                }
+            }
+        });
 }
 
 // ============================================================================
