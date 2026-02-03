@@ -36,35 +36,35 @@
               </div>
             </template>
             <div class="operation-list">
-              <el-button size="small" class="operation-btn" @click="showFilterDialog" :disabled="!hasData">
+              <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showFilterDialog">
                 <el-icon><Search /></el-icon>
                 <span>筛选过滤</span>
               </el-button>
-              <el-button size="small" class="operation-btn" @click="showDropColumnsDialog" :disabled="!hasData">
+              <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showDropColumnsDialog">
                 <el-icon><Delete /></el-icon>
                 <span>删除列</span>
               </el-button>
-              <el-button size="small" class="operation-btn" @click="showSelectColumnsDialog" :disabled="!hasData">
+              <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showSelectColumnsDialog">
                 <el-icon><Select /></el-icon>
                 <span>选择列</span>
               </el-button>
-              <el-button size="small" class="operation-btn" @click="handleDropNulls" :disabled="!hasData">
+              <el-button :disabled="!hasData" class="operation-btn" size="small" @click="handleDropNulls">
                 <el-icon><RemoveFilled /></el-icon>
                 <span>删除空值行</span>
               </el-button>
-              <el-button size="small" class="operation-btn" @click="handleDropAllNulls" :disabled="!hasData">
+              <el-button :disabled="!hasData" class="operation-btn" size="small" @click="handleDropAllNulls">
                 <el-icon><RemoveFilled /></el-icon>
                 <span>删除全空行</span>
               </el-button>
-              <el-button size="small" class="operation-btn" @click="showFillNullDialog" :disabled="!hasData">
+              <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showFillNullDialog">
                 <el-icon><MagicStick /></el-icon>
                 <span>填充空值</span>
               </el-button>
-              <el-button size="small" class="operation-btn" @click="showRenameColumnsDialog" :disabled="!hasData">
+              <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showRenameColumnsDialog">
                 <el-icon><Edit /></el-icon>
                 <span>更改列名称</span>
               </el-button>
-              <el-button size="small" class="operation-btn" @click="showCastTypesDialog" :disabled="!hasData">
+              <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showCastTypesDialog">
                 <el-icon><Switch /></el-icon>
                 <span>更改列类型</span>
               </el-button>
@@ -80,15 +80,15 @@
               </div>
             </template>
             <div class="operation-list">
-              <el-button size="small" class="operation-btn" @click="showPivotDialog" :disabled="!hasData">
+              <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showPivotDialog">
                 <el-icon><Sort /></el-icon>
                 <span>长表转宽表</span>
               </el-button>
-              <el-button size="small" class="operation-btn" @click="showUnpivotDialog" :disabled="!hasData">
+              <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showUnpivotDialog">
                 <el-icon><Sort /></el-icon>
                 <span>宽表转长表</span>
               </el-button>
-              <el-button size="small" class="operation-btn" @click="showRollingDialog" :disabled="!hasData">
+              <el-button :disabled="!hasData" class="operation-btn" size="small" @click="showRollingDialog">
                 <el-icon><TrendCharts /></el-icon>
                 <span>滑动窗口</span>
               </el-button>
@@ -171,7 +171,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {
   Back,
   CirclePlus,
@@ -479,7 +479,7 @@ async function handleSortConfirm(payload: { column: string; descending: boolean;
 }
 
 .undo-redo-section {
-  padding: 16px;
+  padding: 4px;
   background-color: #f5f7fa;
   border-bottom: 1px solid #dcdfe6;
 }
@@ -487,7 +487,6 @@ async function handleSortConfirm(payload: { column: string; descending: boolean;
 .undo-redo-group {
   width: 100%;
   display: flex;
-  margin-bottom: 12px;
 }
 
 .undo-redo-group .el-button {

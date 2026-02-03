@@ -5,7 +5,7 @@
     :cacheOverflowSize="2"
     :columnDefs="columnDefs"
     :defaultColDef="defaultColDef"
-    :enableCellTextSelection="true"
+    :enableCellTextSelection="false"
     :ensureDomOrder="true"
     :infiniteInitialRowCount="1000"
     :maxBlocksInCache="10"
