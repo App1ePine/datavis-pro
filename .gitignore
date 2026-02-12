@@ -12,6 +12,7 @@ node_modules
 dist
 dist-ssr
 *.local
+*.lock
 
 # Rust 构建输出
 target/
