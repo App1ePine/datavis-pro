@@ -180,21 +180,22 @@ function handleConfirm() {
 .section-title {
   font-size: 14px;
   font-weight: 600;
-  color: #303133;
+  color: #1d2129;
   margin: 0 0 12px 0;
+  letter-spacing: 0.01em;
 }
 
 .subtitle {
   font-size: 12px;
   font-weight: normal;
-  color: #909399;
+  color: #86909c;
   margin-left: 8px;
 }
 
 /* 策略选择 */
 .strategy-section {
   padding-bottom: 20px;
-  border-bottom: 1px solid #e4e7ed;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .strategy-group {
@@ -213,7 +214,19 @@ function handleConfirm() {
 }
 
 .strategy-group :deep(.el-radio.is-bordered) {
-  border-radius: 6px;
+  border-radius: 10px;
+  border-color: rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+}
+
+.strategy-group :deep(.el-radio.is-bordered:hover) {
+  border-color: #409eff;
+  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.1);
+}
+
+.strategy-group :deep(.el-radio.is-bordered.is-checked) {
+  border-color: #409eff;
+  background-color: rgba(64, 158, 255, 0.04);
 }
 
 .radio-content {
@@ -225,18 +238,18 @@ function handleConfirm() {
 .radio-label {
   font-size: 14px;
   font-weight: 500;
-  color: #303133;
+  color: #1d2129;
 }
 
 .radio-desc {
   font-size: 12px;
-  color: #909399;
+  color: #86909c;
 }
 
 /* 自定义值 */
 .custom-value-section {
   padding-bottom: 20px;
-  border-bottom: 1px solid #e4e7ed;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 /* 列选择 */
@@ -253,15 +266,16 @@ function handleConfirm() {
 .columns-list {
   max-height: 240px;
   overflow-y: auto;
-  border: 1px solid #e4e7ed;
-  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
   padding: 12px;
-  background-color: #fafafa;
+  background-color: #fafbfc;
 }
 
 .column-item {
   padding: 8px 0;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  transition: all 0.15s ease;
 }
 
 .column-item:last-child {
@@ -282,9 +296,9 @@ function handleConfirm() {
 }
 
 .column-name {
-  font-family: 'Courier New', monospace;
+  font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
   font-size: 13px;
-  color: #303133;
+  color: #1d2129;
   flex: 1;
 }
 
@@ -300,6 +314,6 @@ function handleConfirm() {
   display: flex;
   gap: 8px;
   padding-top: 8px;
-  border-top: 1px solid #e4e7ed;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 </style>

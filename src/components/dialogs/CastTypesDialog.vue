@@ -178,25 +178,27 @@ watch(
 }
 
 .cast-table {
-  border: 1px solid #e4e7ed;
-  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
   overflow: hidden;
 }
 
 .column-name {
   font-weight: 500;
-  color: #303133;
+  color: #1d2129;
+  font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+  font-size: 13px;
 }
 
 .dialog-footer-info {
   margin-top: 16px;
   padding-top: 12px;
-  border-top: 1px solid #e4e7ed;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .info-text {
   font-size: 13px;
-  color: #909399;
+  color: #86909c;
   display: block;
   margin-bottom: 8px;
 }
@@ -206,8 +208,9 @@ watch(
 }
 
 :deep(.el-table th) {
-  background-color: #f5f7fa;
+  background-color: #fafbfc;
   font-weight: 600;
+  color: #1d2129;
 }
 
 :deep(.el-alert) {

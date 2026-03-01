@@ -160,9 +160,9 @@ watch(
 }
 
 .column-list {
-  border: 1px solid #e4e7ed;
-  border-radius: 4px;
-  background-color: #fafafa;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  background-color: #fafbfc;
 }
 
 .column-list > .el-scrollbar {
@@ -171,8 +171,8 @@ watch(
 
 .column-item {
   padding: 12px 16px;
-  border-bottom: 1px solid #e4e7ed;
-  transition: background-color 0.2s;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
 }
 
 .column-item:last-child {
@@ -180,12 +180,14 @@ watch(
 }
 
 .column-item:hover {
-  background-color: #f0f2f5;
+  background: linear-gradient(135deg, #f7f8fa 0%, #f0f2f5 100%);
 }
 
 .column-name {
   font-weight: 500;
-  color: #303133;
+  color: #1d2129;
+  font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+  font-size: 13px;
   margin-right: 8px;
 }
 
@@ -196,12 +198,12 @@ watch(
 .dialog-footer-info {
   margin-top: 16px;
   padding-top: 12px;
-  border-top: 1px solid #e4e7ed;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .info-text {
   font-size: 13px;
-  color: #909399;
+  color: #86909c;
 }
 
 :deep(.el-checkbox) {

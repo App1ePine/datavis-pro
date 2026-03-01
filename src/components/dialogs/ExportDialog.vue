@@ -89,14 +89,15 @@ function handleConfirm() {
 .section-title {
   font-size: 14px;
   font-weight: 600;
-  color: #303133;
+  color: #1d2129;
   margin: 0 0 12px 0;
+  letter-spacing: 0.01em;
 }
 
 /* 格式选择 */
 .format-section {
   padding-bottom: 20px;
-  border-bottom: 1px solid #e4e7ed;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .format-grid {
@@ -111,22 +112,24 @@ function handleConfirm() {
   align-items: center;
   justify-content: center;
   padding: 24px 16px;
-  border: 2px solid #e4e7ed;
-  border-radius: 8px;
+  border: 2px solid rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
   background-color: #fff;
 }
 
 .format-card:hover {
   border-color: #409eff;
   background-color: #f0f9ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.12);
 }
 
 .format-card.active {
   border-color: #409eff;
   background-color: #ecf5ff;
-  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(64, 158, 255, 0.2);
 }
 
 .format-icon {
@@ -137,13 +140,13 @@ function handleConfirm() {
 .format-name {
   font-size: 16px;
   font-weight: 600;
-  color: #303133;
+  color: #1d2129;
   margin-bottom: 4px;
 }
 
 .format-desc {
   font-size: 12px;
-  color: #909399;
+  color: #86909c;
   text-align: center;
 }
 </style>

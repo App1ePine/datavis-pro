@@ -483,13 +483,14 @@ async function handleCheckUpdate() {
 }
 
 .app-header {
-  background-color: #ffffff;
-  border-bottom: 1px solid #e4e7ed;
+  background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   display: flex;
   align-items: center;
   padding: 0;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.02);
   z-index: 10;
+  /* backdrop-filter removed to prevent text blur in WebView */
 }
 
 .header-content {
@@ -497,8 +498,8 @@ async function handleCheckUpdate() {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
-  gap: 24px;
+  padding: 0 20px;
+  gap: 20px;
 }
 
 .header-left {
@@ -511,20 +512,27 @@ async function handleCheckUpdate() {
 .app-branding {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .app-icon {
-  width: 56px;
-  height: 56px;
+  width: 36px;
+  height: 36px;
   display: block;
+  filter: drop-shadow(0 2px 4px rgba(64, 158, 255, 0.2));
+  transition: transform 0.3s ease;
+}
+
+.app-icon:hover {
+  transform: scale(1.08) rotate(-3deg);
 }
 
 .app-title {
-  font-size: 24px;
-  font-weight: bold;
-  color: #303133;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1d2129;
   margin: 0;
+  letter-spacing: -0.02em;
 }
 
 .header-center {
@@ -537,18 +545,25 @@ async function handleCheckUpdate() {
 .dataset-info {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 8px 20px;
-  background: #f5f7fa;
-  border: 1px solid #e4e7ed;
+  gap: 10px;
+  padding: 6px 18px;
+  background: linear-gradient(135deg, #f0f5ff 0%, #e8f0fe 100%);
+  border: 1px solid rgba(64, 158, 255, 0.15);
   border-radius: 20px;
-  color: #606266;
+  color: #4e5969;
   font-size: 13px;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(64, 158, 255, 0.06);
+}
+
+.dataset-info:hover {
+  border-color: rgba(64, 158, 255, 0.3);
+  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.12);
 }
 
 .dataset-icon {
-  font-size: 16px;
-  color: #909399;
+  font-size: 15px;
+  color: #409eff;
 }
 
 .dataset-name {
@@ -557,24 +572,38 @@ async function handleCheckUpdate() {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: #303133;
+  color: #1d2129;
 }
 
 .dataset-stats {
-  font-family: 'Courier New', monospace;
+  font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
   font-size: 12px;
-  color: #606266;
+  color: #4e5969;
+  font-weight: 500;
 }
 
 .dataset-info .el-divider {
-  background-color: #dcdfe6;
+  background-color: rgba(64, 158, 255, 0.2);
   margin: 0;
 }
 
 .header-right {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-shrink: 0;
+}
+
+.header-right .el-button {
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 8px 14px;
+  transition: all 0.25s ease;
+}
+
+.header-right .el-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .main-container {
@@ -583,9 +612,10 @@ async function handleCheckUpdate() {
 }
 
 .left-sidebar {
-  background-color: #f5f7fa;
-  border-right: 1px solid #dcdfe6;
+  background-color: #fafbfc;
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
   overflow: hidden;
+  transition: box-shadow 0.3s ease;
 }
 
 .content-area {
@@ -600,7 +630,7 @@ async function handleCheckUpdate() {
 .empty-state {
   height: 100%;
   overflow-y: auto;
-  background: linear-gradient(to bottom, #f5f7fa 0%, #ffffff 100%);
+  background: linear-gradient(165deg, #f6f8fc 0%, #eef2ff 40%, #ffffff 100%);
 }
 
 .empty-container {
@@ -612,41 +642,76 @@ async function handleCheckUpdate() {
 }
 
 .welcome-section {
-  max-width: 900px;
+  max-width: 860px;
   width: 100%;
+  animation: welcomeFadeIn 0.6s ease-out;
+}
+
+@keyframes welcomeFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .welcome-header {
   text-align: center;
-  margin-bottom: 48px;
+  margin-bottom: 40px;
 }
 
 .welcome-title {
-  font-size: 32px;
-  font-weight: 600;
-  color: #303133;
-  margin: 0 0 16px 0;
+  font-size: 34px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #1d2129 0%, #409eff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 14px 0;
   line-height: 1.3;
+  letter-spacing: -0.02em;
 }
 
 .welcome-subtitle {
   font-size: 16px;
-  color: #606266;
+  color: #86909c;
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.7;
+  font-weight: 400;
 }
 
 .quick-start {
   text-align: center;
-  margin-bottom: 64px;
-  padding: 32px;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 56px;
+  padding: 36px 32px;
+  background: linear-gradient(135deg, #ffffff 0%, #f7f9ff 100%);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(64, 158, 255, 0.08);
+  transition: all 0.3s ease;
+}
+
+.quick-start:hover {
+  box-shadow: 0 8px 32px rgba(64, 158, 255, 0.1), 0 2px 4px rgba(0, 0, 0, 0.04);
+  border-color: rgba(64, 158, 255, 0.15);
 }
 
 .quick-start .el-button {
   margin-bottom: 20px;
+  border-radius: 10px;
+  padding: 12px 28px;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(64, 158, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.quick-start .el-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(64, 158, 255, 0.4);
 }
 
 .supported-formats {
@@ -657,50 +722,66 @@ async function handleCheckUpdate() {
   flex-wrap: wrap;
 }
 
+.supported-formats .el-tag {
+  border-radius: 6px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
 .format-label {
-  font-size: 14px;
-  color: #909399;
+  font-size: 13px;
+  color: #86909c;
   margin-right: 4px;
 }
 
 .features-section {
-  margin-top: 48px;
+  margin-top: 0;
 }
 
 .features-title {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
-  color: #303133;
-  margin: 0 0 24px 0;
+  color: #1d2129;
+  margin: 0 0 20px 0;
   text-align: center;
+  letter-spacing: -0.01em;
 }
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
 }
 
 .feature-item {
   display: flex;
-  gap: 16px;
-  padding: 24px;
-  background: #ffffff;
-  border-radius: 8px;
-  border: 1px solid #ebeef5;
-  transition: all 0.3s ease;
+  gap: 14px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* backdrop-filter removed to prevent text blur in WebView */
 }
 
 .feature-item:hover {
-  border-color: #409eff;
-  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.15);
-  transform: translateY(-2px);
+  border-color: rgba(64, 158, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(64, 158, 255, 0.1);
+  transform: translateY(-3px);
+  background: #ffffff;
 }
 
 .feature-icon {
-  font-size: 32px;
+  font-size: 28px;
   line-height: 1;
   flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f0f5ff 0%, #e8f4ff 100%);
+  border-radius: 12px;
 }
 
 .feature-content {
@@ -708,15 +789,16 @@ async function handleCheckUpdate() {
 }
 
 .feature-content h4 {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  color: #303133;
-  margin: 0 0 8px 0;
+  color: #1d2129;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
 }
 
 .feature-content p {
-  font-size: 14px;
-  color: #606266;
+  font-size: 13px;
+  color: #86909c;
   margin: 0;
   line-height: 1.6;
 }
@@ -741,8 +823,8 @@ async function handleCheckUpdate() {
 
 .right-sidebar {
   background-color: #ffffff;
-  border-left: 1px solid #dcdfe6;
-  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.05);
+  border-left: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: -1px 0 6px rgba(0, 0, 0, 0.03);
   z-index: 10;
   overflow: hidden;
 }

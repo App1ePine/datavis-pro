@@ -184,6 +184,6 @@ watch(
 .loading-overlay p {
   margin-top: 16px;
   font-size: 14px;
-  color: #606266;
+  color: #4e5969;
 }
 </style>

@@ -85,7 +85,7 @@ function handleConfirm() {
 
 .sort-hint {
   margin-left: 12px;
-  color: var(--el-text-color-secondary);
+  color: #86909c;
   font-size: 12px;
 }
 </style>

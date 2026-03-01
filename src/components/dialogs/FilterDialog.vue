@@ -171,14 +171,15 @@ function handleConfirm() {
 .section-title {
   font-size: 14px;
   font-weight: 600;
-  color: #303133;
+  color: #1d2129;
   margin: 0 0 12px 0;
+  letter-spacing: 0.01em;
 }
 
 .subtitle {
   font-size: 12px;
   font-weight: normal;
-  color: #909399;
+  color: #86909c;
   margin-left: 8px;
 }
 
@@ -199,10 +200,10 @@ function handleConfirm() {
 }
 
 .alert-content code {
-  background-color: #f5f7fa;
+  background-color: rgba(64, 158, 255, 0.08);
   padding: 2px 6px;
-  border-radius: 3px;
-  font-family: 'Courier New', monospace;
+  border-radius: 4px;
+  font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
   font-size: 12px;
   color: #e6a23c;
 }
@@ -210,11 +211,11 @@ function handleConfirm() {
 /* 表达式输入 */
 .expression-section {
   padding-bottom: 20px;
-  border-bottom: 1px solid #e4e7ed;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .expression-input :deep(textarea) {
-  font-family: 'Courier New', monospace;
+  font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
   font-size: 13px;
 }
 
@@ -232,10 +233,10 @@ function handleConfirm() {
 .columns-list {
   max-height: 160px;
   overflow-y: auto;
-  border: 1px solid #e4e7ed;
-  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
   padding: 0;
-  background-color: #fafafa;
+  background-color: #fafbfc;
 }
 
 .column-item {
@@ -244,8 +245,8 @@ function handleConfirm() {
   justify-content: space-between;
   padding: 8px 12px;
   cursor: pointer;
-  transition: background-color 0.2s;
-  border-bottom: 1px solid #ebeef5;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .column-item:last-child {
@@ -253,20 +254,20 @@ function handleConfirm() {
 }
 
 .column-item:hover {
-  background-color: #e6f7ff;
+  background: linear-gradient(135deg, #ecf5ff 0%, #f0f9ff 100%);
 }
 
 .column-name {
-  font-family: 'Courier New', monospace;
+  font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
   font-size: 13px;
-  color: #303133;
+  color: #1d2129;
   flex: 1;
 }
 
 /* 操作符参考 */
 .operators-reference {
   padding-bottom: 20px;
-  border-bottom: 1px solid #e4e7ed;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .operators-grid {

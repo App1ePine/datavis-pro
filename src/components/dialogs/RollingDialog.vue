@@ -293,24 +293,25 @@ const handleConfirm = async () => {
   margin: 0;
   font-size: 14px;
   font-weight: 600;
-  color: #303133;
+  color: #1d2129;
+  letter-spacing: 0.01em;
 }
 
 .hint {
   font-size: 12px;
-  color: #909399;
+  color: #86909c;
   line-height: 1.5;
 }
 
 .result-preview {
   padding: 10px;
-  background-color: #f0f9ff;
-  border-radius: 4px;
+  background-color: rgba(64, 158, 255, 0.04);
+  border-radius: 8px;
 }
 
 .result-preview strong {
   color: #409eff;
-  font-family: 'Courier New', monospace;
+  font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
 }
 
 .window-config-grid {
@@ -330,7 +331,7 @@ const handleConfirm = async () => {
 
 .label {
   font-size: 13px;
-  color: #606266;
+  color: #4e5969;
   white-space: nowrap;
   min-width: 80px;
 }
@@ -340,11 +341,6 @@ const handleConfirm = async () => {
   align-items: center;
   gap: 10px;
   padding-bottom: 5px;
-}
-
-.label {
-  font-size: 13px;
-  color: #606266;
 }
 
 .dialog-footer {

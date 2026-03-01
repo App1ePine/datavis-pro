@@ -187,7 +187,8 @@ const handleConfirm = async () => {
   margin: 0;
   font-size: 14px;
   font-weight: 600;
-  color: #303133;
+  color: #1d2129;
+  letter-spacing: 0.01em;
 }
 
 .dialog-footer {
